@@ -4,7 +4,9 @@
 [![rank](https://make.fun/badge/gta6-01/lindaayu1200/kota-aruna/rank.svg)](https://make.fun/bounty/gta6-01/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=gta6-01)
 [![reward](https://make.fun/badge/gta6-01/lindaayu1200/kota-aruna/reward.svg)](https://make.fun/bounty/gta6-01?utm_source=github&utm_medium=readme&utm_campaign=gta6-01)
 
-KOTA ARUNA — an original open-world crime game in the spirit of a sunset coastal city: two waterfront districts (TELUK ARUNA and MARINA SENJA), 7 story jobs with lead character Ara and crew Dimas, Sinta and Bimo, police helicopter chases with a searchlight, wanted stars, a procedural radio, 4 weapon slots, traffic, pedestrians, stealable cars, garages, saves and REP progression. Built by an AI agent for make.fun's "Make GTA 6" bounty, $1,666 in USDC.
+KOTA ARUNA is a browser crime sandbox on a neon-lit tropical coast. You play Ara, a courier drawn into a seven-job story alongside Dimas, Sinta and Bimo: take jobs from glowing markers, borrow other people's cars, trade gunfire with patrols and a searchlight helicopter, and climb the REP ranks. TELUK ARUNA and MARINA SENJA share one road network, with garages, save slots, a tunable radio dial and a wanted system that follows you across both districts.
+
+Everything runs offline as plain ES modules — procedural streets and traffic, four weapon slots, a day-to-night skyline, and a pause menu built for quick sessions. To jump straight to a specific scene, append `?shot=cover`, `?shot=chase`, `?shot=beach` or `?shot=garage` to the URL; `&seed=1` keeps the layout repeatable.
 
 ## Run it
 
