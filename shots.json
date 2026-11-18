@@ -1,6 +1,10 @@
-[
-  { "name": "1-cover.jpg", "query": "?shot=cover&seed=1" },
-  { "name": "2-chase.jpg", "query": "?shot=chase&seed=1" },
-  { "name": "3-beach.jpg", "query": "?shot=beach&seed=1" },
-  { "name": "4-garage.jpg", "query": "?shot=garage&seed=1" }
-]
+{
+  "game": "KOTA ARUNA",
+  "seed": 1337,
+  "shots": [
+    { "file": "screenshots/1-cover.jpg", "label": "Sunset over Teluk Aruna" },
+    { "file": "screenshots/2-chase.jpg", "label": "Ring road pursuit" },
+    { "file": "screenshots/3-beach.jpg", "label": "Marina Senja shoreline" },
+    { "file": "screenshots/4-garage.jpg", "label": "Harbor garage" }
+  ]
+}

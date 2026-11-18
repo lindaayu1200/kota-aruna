@@ -1,41 +1,167 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" href="data:,">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="dark" />
   <title>KOTA ARUNA</title>
   <style>
-    html, body {
-      margin: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background: #160f22;
-      color: #ffd9a8;
-      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    :root {
+      --ink: #1b1329;
+      --cream: #ffe6c2;
+      --sunset: #ff8b62;
+      --rose: #ff5d8f;
+      --cyan: #66e8ff;
+      --glass: rgba(23, 14, 35, 0.44);
+      --line: rgba(255, 226, 190, 0.32);
     }
 
-    /* The whole page is the viewport; the WebGL canvas paints the city edge to edge. */
-    #game {
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 18% 76%, #ffb36e 0%, transparent 38%),
+        radial-gradient(circle at 72% 22%, #7b3f8f 0%, transparent 44%),
+        linear-gradient(160deg, #261a48 0%, #d8666b 58%, #f5a05e 100%);
+      color: var(--cream);
+      font-family: "Trebuchet MS", "Segoe UI", system-ui, sans-serif;
+    }
+
+    canvas#game {
       position: fixed;
       inset: 0;
       display: block;
-      width: 100%;
-      height: 100%;
-      touch-action: none;
+      width: 100vw;
+      height: 100vh;
       outline: none;
+      touch-action: none;
     }
 
-    /* Overlay for the HUD. Empty until the game modules populate it. */
     #hud {
       position: fixed;
       inset: 0;
-      z-index: 2;
+      z-index: 10;
       pointer-events: none;
-      user-select: none;
+      padding: clamp(18px, 3vw, 40px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background:
+        linear-gradient(180deg, rgba(21, 12, 32, 0.42) 0%, transparent 22%, transparent 76%, rgba(21, 12, 32, 0.42) 100%);
+      text-shadow: 0 2px 12px rgba(20, 8, 30, 0.7);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-mark {
+      width: 52px;
+      height: 52px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      background: var(--glass);
+      color: var(--sunset);
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      font-size: 17px;
+      box-shadow: 0 0 28px rgba(255, 139, 98, 0.3);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: clamp(24px, 3.3vw, 46px);
+      line-height: 0.95;
+      letter-spacing: 0.16em;
+      font-weight: 700;
+    }
+
+    .brand p {
+      margin: 7px 0 0;
+      font-size: 10px;
+      letter-spacing: 0.34em;
+      color: rgba(255, 230, 194, 0.7);
+    }
+
+    .readout {
+      position: absolute;
+      top: clamp(20px, 3vw, 42px);
+      right: clamp(18px, 3vw, 40px);
+      text-align: right;
+      font-size: 10px;
+      letter-spacing: 0.24em;
+      color: rgba(255, 230, 194, 0.76);
+    }
+
+    .readout span {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .readout #hud-district {
+      color: var(--cyan);
+      font-size: 12px;
+      letter-spacing: 0.28em;
+    }
+
+    .footer {
+      align-self: center;
+      padding: 9px 18px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--glass);
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      color: rgba(255, 230, 194, 0.82);
+      backdrop-filter: blur(6px);
+    }
+
+    @media (max-width: 700px) {
+      .brand-mark {
+        display: none;
+      }
+
+      .readout {
+        top: 104px;
+        right: auto;
+        left: 20px;
+        text-align: left;
+      }
+
+      .footer {
+        font-size: 8px;
+        letter-spacing: 0.2em;
+      }
     }
   </style>
+</head>
+<body>
+  <canvas id="game"></canvas>
+  <div id="hud">
+    <div class="brand">
+      <span class="brand-mark">KA</span>
+      <div>
+        <h1>KOTA ARUNA</h1>
+        <p>SUNSET HARBOR / CORE SCAFFOLD</p>
+      </div>
+    </div>
+    <div class="readout">
+      <span id="hud-district">TELUK ARUNA</span>
+      <span id="hud-seed">SEED</span>
+    </div>
+    <div class="footer">TWO DISTRICTS / ONE SUNSET / RING ROAD</div>
+  </div>
   <script type="importmap">
     {
       "imports": {
@@ -43,10 +169,6 @@
       }
     }
   </script>
-</head>
-<body>
-  <canvas id="game"></canvas>
-  <div id="hud"></div>
   <script type="module" src="./src/main.js"></script>
 </body>
 </html>

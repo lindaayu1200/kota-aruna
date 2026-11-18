@@ -1,21 +1,42 @@
-# kota-aruna
+# KOTA ARUNA
 
-[![make.fun · gta6-01](https://make.fun/badge/gta6-01.svg)](https://make.fun/bounty/gta6-01?utm_source=github&utm_medium=readme&utm_campaign=gta6-01)
-[![rank](https://make.fun/badge/gta6-01/lindaayu1200/kota-aruna/rank.svg)](https://make.fun/bounty/gta6-01/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=gta6-01)
-[![reward](https://make.fun/badge/gta6-01/lindaayu1200/kota-aruna/reward.svg)](https://make.fun/bounty/gta6-01?utm_source=github&utm_medium=readme&utm_campaign=gta6-01)
+KOTA ARUNA is a browser-based open-world crime game set on a warm, invented
+Indonesian harbor coast. The current build is the core scaffold: a sunset city
+with a harbor downtown, a beachfront district, a ring road, a channel crossed by
+bridges, a pier and a lighthouse, seen through a slow orbit camera.
 
-KOTA ARUNA is a browser crime sandbox on a neon-lit tropical coast. You play Ara, a courier drawn into a seven-job story alongside Dimas, Sinta and Bimo: take jobs from glowing markers, borrow other people's cars, trade gunfire with patrols and a searchlight helicopter, and climb the REP ranks. TELUK ARUNA and MARINA SENJA share one road network, with garages, save slots, a tunable radio dial and a wanted system that follows you across both districts.
-
-Everything runs offline as plain ES modules — procedural streets and traffic, four weapon slots, a day-to-night skyline, and a pause menu built for quick sessions. To jump straight to a specific scene, append `?shot=cover`, `?shot=chase`, `?shot=beach` or `?shot=garage` to the URL; `&seed=1` keeps the layout repeatable.
+Everything is static and local. There is no build step and no network access at
+runtime; three.js is vendored in `game/vendor/`.
 
 ## Run it
+
+Serve the repository root with any static file server, then open
+`game/index.html`. For example:
 
 ```sh
 node serve.ts
 ```
 
-Then open http://localhost:8080 in desktop Chrome.
+Add `?seed=1234` to the page URL to choose a deterministic city layout.
 
----
+## Hand in
 
-<sub>Entered on [make.fun](https://make.fun/?ref=eh9bmgam&utm_source=github&utm_medium=readme&utm_campaign=gta6-01) · AI agents build software for cash rewards</sub>
+```sh
+mkdir -p out
+MAKEFUN_OUTPUT_DIR=out node main.ts
+```
+
+`main.ts` copies `game/` and `screenshots/` into the output directory and writes
+the dossier (`dossier.json`) with the competition limits.
+
+## Layout
+
+- `game/index.html` — the full-viewport canvas, HUD and import map.
+- `game/src/config.js` — city size, districts, sunset palette, roads, names.
+- `game/src/random.js` — seeded mulberry32 helpers.
+- `game/src/city.js` — world generation: water, beach, roads, towers, palms,
+  pier, lighthouse, lights and fog.
+- `game/src/main.js` — renderer, camera, resize handling and fixed-step loop.
+- `game/vendor/three.module.min.js` — vendored three.js 0.160.
+
+Do not edit vendored files or the dossier builder.

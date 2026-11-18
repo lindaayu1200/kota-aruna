@@ -1,82 +1,125 @@
-// KOTA ARUNA — all of the city's tuning numbers and colours live here.
-// World coordinates are metres on a flat X/Z plane: +X points inland (east) and -X points out to
-// the sea (west). The beach runs down the western edge, and a tidal channel cuts in from the sea
-// between the two districts, so the bridges are the obvious crossroads.
+// KOTA ARUNA — shared world constants.
+// The city is a warm, fictional Indonesian harbor coast at sundown.
 
 export const CITY_NAME = 'KOTA ARUNA';
-
-/** Fixed simulation step, in seconds. The renderer may run faster or slower than this. */
 export const STEP = 1 / 60;
+export const CITY_SIZE = 900;
 
-export const CITY = {
-  width: 900,
-  depth: 900,
-  halfWidth: 450,
-  halfDepth: 450,
-  waterLevel: -0.7,
-  beach: { west: -350, inland: -278 },
-  channel: { centerZ: 6, width: 52, west: -450, east: 205 },
+// The playable land sits east of the shoreline; the z range is a little
+// taller than the x range so the ring road can breathe.
+export const GROUND = {
+  minX: -320,
+  maxX: 460,
+  minZ: -470,
+  maxZ: 470,
 };
 
-/** The two neighbourhoods. centre is [x, z]; radius is a soft influence radius, not a wall. */
 export const DISTRICTS = [
-  { id: 'teluk-aruna', name: 'TELUK ARUNA', kind: 'harbor-downtown', center: [-80, -175], radius: 185 },
-  { id: 'marina-senja', name: 'MARINA SENJA', kind: 'beach', center: [-170, 190], radius: 180 },
+  {
+    id: 'teluk-aruna',
+    name: 'TELUK ARUNA',
+    kind: 'harbor-downtown',
+    center: { x: 180, z: 40 },
+    radius: 265,
+  },
+  {
+    id: 'marina-senja',
+    name: 'MARINA SENJA',
+    kind: 'beach',
+    center: { x: -150, z: -120 },
+    radius: 245,
+  },
 ];
 
-/** Sunset colours. Hex strings are safe to hand straight to THREE.Color. */
 export const PALETTE = {
-  skyTop: '#231739',
-  skyBottom: '#f08a52',
+  skyTop: '#2a1b4d',
+  skyHorizon: '#f08a68',
   sun: '#ffd08a',
-  fog: '#8d5a6b',
-  water: '#2f4b6b',
-  waterGlint: '#b56a72',
-  sand: '#d8b58a',
-  ground: '#6d6a63',
-  road: '#2c2733',
-  roadLine: '#e8c795',
-  concrete: '#8c8492',
-  neon: ['#ff5fa2', '#55e6ff', '#ffc857', '#9b7bff'],
-  tower: '#3a3550',
-  beachBlock: '#e6b9a4',
-  palmTrunk: '#7a563e',
-  palmLeaf: '#3f7d5c',
+  fog: '#e5977f',
+  waterDeep: '#12394b',
+  waterShallow: '#3a8f92',
+  sand: '#efc58d',
+  ground: '#3c3347',
+  road: '#181923',
+  lane: '#f7d9a4',
+  wood: '#6d4b36',
+  stone: '#827071',
+  lighthouse: '#f2e6d8',
+  neon: {
+    cyan: '#5ef2ff',
+    pink: '#ff5ea8',
+    amber: '#ffb45a',
+  },
+  pastels: [
+    '#f2b5a0',
+    '#f7d8a8',
+    '#a8d8cf',
+    '#e7a6c4',
+    '#c5b6e8',
+    '#9ec9e8',
+  ],
+  towerTints: [
+    '#7c8fae',
+    '#9a8fbc',
+    '#6f8fa0',
+    '#8c7ba8',
+    '#809bb5',
+  ],
+  greens: ['#2f6b4f', '#3d8a5e', '#245c46', '#4b9a66'],
 };
 
-/** Street grid and the ring road that wraps around both districts. */
-export const ROADS = {
-  width: 20,
-  laneWidth: 10,
-  spacing: 90,
-  verticalX: [-360, -270, -180, -90, 0, 90, 180, 270, 360],
-  horizontalZ: [-360, -270, -180, -90, 0, 90, 180, 270, 360],
-  ring: { center: [20, 10], radiusX: 290, radiusZ: 378, width: 24 },
-  bridges: [
-    { x: -270, name: 'Jembatan Pasir Putih' },
-    { x: -180, name: 'Jembatan Pasar Ikan' },
-    { x: 90, name: 'Jembatan Senja' },
-  ],
-  // Invented street names with a coastal Indonesian flavour.
-  names: {
-    vertical: [
-      'Jalan Angin Laut', 'Jalan Pasir Putih', 'Jalan Teluk Aruna', 'Jalan Nelayan',
-      'Jalan Matahari', 'Jalan Karang Biru', 'Jalan Sireh', 'Jalan Pelabuhan Baru',
-      'Jalan Cakrawala',
-    ],
-    horizontal: [
-      'Jalan Senja Raya', 'Jalan Gambir', 'Jalan Laut Selatan', 'Jalan Tanjung Gelap',
-      'Jalan Bakau', 'Jalan Bintang Timur', 'Jalan Pesisir', 'Jalan Gamelan',
-      'Jalan Bulusan',
-    ],
-    ring: 'Jalan Lingkar Aruna',
+export const CITY_LAYOUT = {
+  waterLevel: 0.05,
+  shorelineX: -300,
+  beachWidth: 52,
+  roadGrid: {
+    xs: [-200, -80, 40, 160, 280],
+    zs: [-280, -140, 0, 140, 280],
+    width: 16,
+  },
+  ringRoad: {
+    center: { x: 60, z: 0 },
+    radiusX: 370,
+    radiusZ: 400,
+    width: 24,
+    segments: 72,
+  },
+  channel: {
+    z: 200,
+    halfWidth: 28,
+    startX: -320,
+    endX: 180,
+  },
+  pier: {
+    z: -170,
+    startX: -292,
+    endX: -430,
+    width: 9,
+  },
+  lighthouse: {
+    x: -436,
+    z: -170,
   },
 };
 
-/** Where the player (or a parked car) can start out: on dry road, in each district. */
-export const SPAWN_ZONES = [
-  { district: 'teluk-aruna', x: -180, z: -180 },
-  { district: 'teluk-aruna', x: -90, z: -270 },
-  { district: 'marina-senja', x: -180, z: 180 },
-  { district: 'marina-senja', x: -270, z: 270 },
-];
+// Street names are invented for this coast: old harbor nicknames, sea light,
+// and the colours the sky turns just before evening.
+export const STREET_NAMES = {
+  northSouth: [
+    'Jalan Teluk Aruna',
+    'Jalan Ombak Biru',
+    'Jalan Bintang Utara',
+    'Jalan Dermaga Tua',
+    'Jalan Cakrawala',
+  ],
+  eastWest: [
+    'Jalan Marina Senja',
+    'Jalan Pantai Kencana',
+    'Jalan Senja Raya',
+    'Jalan Tanjung Harapan',
+    'Jalan Pasir Emas',
+  ],
+  ring: 'Jalan Lingkar Aruna',
+  pier: 'Dermaga Karang Senja',
+  channel: 'Terusan Aruna',
+};
