@@ -1,20 +1,20 @@
 import { cpSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildDossier } from './vendor/makefun-game.ts';
 
-const here = fileURLToPath(new URL('.', import.meta.url));
-const output = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
+const repositoryRoot = dirname(fileURLToPath(import.meta.url));
+const destinationRoot = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
 
-mkdirSync(output, { recursive: true });
+mkdirSync(destinationRoot, { recursive: true });
 
-for (const directory of ['game', 'screenshots']) {
-  const destination = join(output, directory);
-  rmSync(destination, { recursive: true, force: true });
-  cpSync(join(here, directory), destination, { recursive: true });
+for (const folder of ['game', 'screenshots']) {
+  const target = join(destinationRoot, folder);
+  rmSync(target, { recursive: true, force: true });
+  cpSync(join(repositoryRoot, folder), target, { recursive: true });
 }
 
-const dossier = buildDossier(output, {
+const dossier = buildDossier(destinationRoot, {
   text_max_bytes: 163840,
   screenshots: { max: 4, max_bytes: 262144 },
   game_max_files: 993,
@@ -22,4 +22,4 @@ const dossier = buildDossier(output, {
   game_path_max_bytes: 1000,
 });
 
-writeFileSync(join(output, 'dossier.json'), dossier);
+writeFileSync(join(destinationRoot, 'dossier.json'), dossier);

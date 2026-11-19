@@ -1,66 +1,65 @@
-// Small deterministic random helper built on mulberry32.
-// Every city run with the same seed must place the same streets, towers,
-// beach houses and palms.
+// Deterministic randomness for KOTA ARUNA.
+// A seed always produces the same street layout, tower skyline and palm grove,
+// so screenshots and replays never drift between runs.
 
-export function createRandom(seed = 1) {
-  let state = (Number(seed) >>> 0) || 0x9e3779b9;
+function normalize(seed) {
+  const numeric = Number(seed);
+  let state = Number.isFinite(numeric) ? Math.trunc(numeric) : 1;
+  state = state >>> 0;
+  return state === 0 ? 0x6d2b79f5 : state;
+}
+
+export function makeRandom(seed = 1337) {
+  let state = normalize(seed);
 
   function next() {
-    state = (state + 0x6d2b79f5) | 0;
-    let t = state;
-    t = Math.imul(t ^ (t >>> 15), t | 1);
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    state ^= state << 13;
+    state >>>= 0;
+    state ^= state >>> 17;
+    state ^= state << 5;
+    state >>>= 0;
+    return state / 4294967296;
   }
 
-  const api = {
+  return {
+    seed: normalize(seed),
     next,
-    float: next,
-
-    range(min, max) {
-      return min + (max - min) * next();
+    value: next,
+    between(low, high) {
+      return low + (high - low) * next();
     },
-
-    int(min, max) {
-      return Math.floor(min + (max - min + 1) * next());
+    whole(low, high) {
+      return Math.floor(low + (high - low + 1) * next());
     },
-
-    chance(probability) {
+    odds(probability) {
       return next() < probability;
     },
-
     sign() {
       return next() < 0.5 ? -1 : 1;
     },
-
-    pick(list) {
-      if (!list || list.length === 0) return undefined;
-      return list[Math.floor(next() * list.length)];
+    choose(items) {
+      if (!Array.isArray(items) || items.length === 0) return undefined;
+      return items[Math.floor(next() * items.length)];
     },
-
-    shuffle(list) {
-      const copy = list.slice();
-      for (let i = copy.length - 1; i > 0; i -= 1) {
-        const j = Math.floor(next() * (i + 1));
-        const value = copy[i];
-        copy[i] = copy[j];
-        copy[j] = value;
+    mix(items) {
+      const result = Array.from(items);
+      for (let index = result.length - 1; index > 0; index -= 1) {
+        const swap = Math.floor(next() * (index + 1));
+        const held = result[index];
+        result[index] = result[swap];
+        result[swap] = held;
       }
-      return copy;
+      return result;
     },
-
-    gaussian() {
-      const u = Math.max(next(), 1e-9);
-      const v = next();
-      return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+    bell() {
+      const first = Math.max(next(), 0.000001);
+      const second = next();
+      return Math.sqrt(-2 * Math.log(first)) * Math.cos(2 * Math.PI * second);
     },
-
-    fork() {
-      return createRandom(Math.floor(next() * 0xffffffff));
+    child() {
+      return makeRandom(Math.floor(next() * 0xffffffff));
     },
   };
-
-  return api;
 }
 
-export default createRandom;
+export default makeRandom;

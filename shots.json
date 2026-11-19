@@ -1,10 +1,32 @@
 {
   "game": "KOTA ARUNA",
   "seed": 1337,
+  "resolution": [1280, 720],
+  "format": "jpeg",
   "shots": [
-    { "file": "screenshots/1-cover.jpg", "label": "Sunset over Teluk Aruna" },
-    { "file": "screenshots/2-chase.jpg", "label": "Ring road pursuit" },
-    { "file": "screenshots/3-beach.jpg", "label": "Marina Senja shoreline" },
-    { "file": "screenshots/4-garage.jpg", "label": "Harbor garage" }
+    {
+      "file": "screenshots/1-cover.jpg",
+      "label": "Sunset over Teluk Aruna",
+      "mode": "cover",
+      "district": "teluk-aruna"
+    },
+    {
+      "file": "screenshots/2-chase.jpg",
+      "label": "Ring road pursuit",
+      "mode": "chase",
+      "district": "teluk-aruna"
+    },
+    {
+      "file": "screenshots/3-marina.jpg",
+      "label": "Searchlight over Marina Senja",
+      "mode": "marina",
+      "district": "marina-senja"
+    },
+    {
+      "file": "screenshots/4-finale.jpg",
+      "label": "Pasang Surut at the helipad",
+      "mode": "finale",
+      "district": "teluk-aruna"
+    }
   ]
 }

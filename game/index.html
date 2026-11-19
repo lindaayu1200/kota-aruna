@@ -4,170 +4,469 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="color-scheme" content="dark" />
-  <title>KOTA ARUNA</title>
+  <title>KOTA ARUNA — Seaside Crime Stories</title>
   <style>
     :root {
-      --ink: #1b1329;
-      --cream: #ffe6c2;
-      --sunset: #ff8b62;
-      --rose: #ff5d8f;
-      --cyan: #66e8ff;
-      --glass: rgba(23, 14, 35, 0.44);
-      --line: rgba(255, 226, 190, 0.32);
+      --night: #120d22;
+      --cream: #ffe6c4;
+      --muted: rgba(255, 230, 196, 0.66);
+      --gold: #ffc179;
+      --cyan: #6aeaf6;
+      --pink: #ff71ae;
+      --danger: #ff526f;
+      --glass: rgba(18, 13, 32, 0.62);
+      --edge: rgba(255, 221, 178, 0.26);
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
-    html,
-    body {
+    html, body {
       width: 100%;
       height: 100%;
       margin: 0;
       overflow: hidden;
-      background:
-        radial-gradient(circle at 18% 76%, #ffb36e 0%, transparent 38%),
-        radial-gradient(circle at 72% 22%, #7b3f8f 0%, transparent 44%),
-        linear-gradient(160deg, #261a48 0%, #d8666b 58%, #f5a05e 100%);
+      background: #241637;
       color: var(--cream);
       font-family: "Trebuchet MS", "Segoe UI", system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
     }
 
-    canvas#game {
+    #scene {
       position: fixed;
       inset: 0;
-      display: block;
       width: 100vw;
       height: 100vh;
-      outline: none;
+      display: block;
       touch-action: none;
+      outline: none;
     }
 
     #hud {
       position: fixed;
       inset: 0;
-      z-index: 10;
+      z-index: 5;
       pointer-events: none;
-      padding: clamp(18px, 3vw, 40px);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      background:
-        linear-gradient(180deg, rgba(21, 12, 32, 0.42) 0%, transparent 22%, transparent 76%, rgba(21, 12, 32, 0.42) 100%);
-      text-shadow: 0 2px 12px rgba(20, 8, 30, 0.7);
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .brand-mark {
-      width: 52px;
-      height: 52px;
+      padding: 22px;
       display: grid;
-      place-items: center;
-      border: 1px solid var(--line);
-      border-radius: 50%;
+      grid-template-columns: minmax(260px, 1fr) auto minmax(260px, 1fr);
+      grid-template-rows: auto 1fr auto;
+      gap: 12px;
+      background: linear-gradient(180deg, rgba(13, 8, 24, 0.5), transparent 24%, transparent 72%, rgba(13, 8, 24, 0.55));
+      text-shadow: 0 2px 9px rgba(8, 4, 18, 0.8);
+    }
+
+    .panel {
+      border: 1px solid var(--edge);
       background: var(--glass);
-      color: var(--sunset);
+      border-radius: 12px;
+      backdrop-filter: blur(7px);
+      box-shadow: 0 10px 30px rgba(8, 4, 18, 0.28), inset 0 1px 0 rgba(255, 240, 210, 0.08);
+    }
+
+    #mission-card {
+      grid-column: 1;
+      grid-row: 1;
+      max-width: 360px;
+      padding: 13px 16px 15px;
+      border-left: 3px solid var(--pink);
+    }
+
+    .eyebrow {
+      font-size: 9px;
+      letter-spacing: 0.26em;
+      color: var(--gold);
       font-weight: 800;
-      letter-spacing: 0.08em;
-      font-size: 17px;
-      box-shadow: 0 0 28px rgba(255, 139, 98, 0.3);
     }
 
-    .brand h1 {
+    #mission-number { float: right; color: var(--cyan); }
+
+    #mission-title {
+      margin: 8px 0 4px;
+      font-size: 24px;
+      letter-spacing: 0.13em;
+      font-weight: 800;
+    }
+
+    #mission-brief {
       margin: 0;
-      font-size: clamp(24px, 3.3vw, 46px);
-      line-height: 0.95;
-      letter-spacing: 0.16em;
-      font-weight: 700;
+      font-size: 11px;
+      line-height: 1.45;
+      color: var(--muted);
     }
 
-    .brand p {
-      margin: 7px 0 0;
-      font-size: 10px;
-      letter-spacing: 0.34em;
-      color: rgba(255, 230, 194, 0.7);
+    #mission-objective {
+      margin-top: 10px;
+      padding-top: 9px;
+      border-top: 1px dashed rgba(255, 220, 180, 0.24);
+      font-size: 11px;
+      color: var(--cream);
     }
 
-    .readout {
-      position: absolute;
-      top: clamp(20px, 3vw, 42px);
-      right: clamp(18px, 3vw, 40px);
+    #mission-objective::before { content: '▸ '; color: var(--cyan); }
+    #mission-reward { float: right; color: var(--gold); font-weight: 800; }
+
+    #stats {
+      grid-column: 3;
+      grid-row: 1;
+      justify-self: end;
       text-align: right;
+      padding: 12px 16px;
+      min-width: 260px;
+    }
+
+    #district-name {
+      font-size: 20px;
+      letter-spacing: 0.2em;
+      font-weight: 800;
+      color: var(--cyan);
+    }
+
+    #district-tag {
+      font-size: 9px;
+      letter-spacing: 0.3em;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    #money-value {
+      font-size: 27px;
+      font-weight: 800;
+      color: var(--gold);
+      margin-top: 6px;
+      letter-spacing: 0.04em;
+    }
+
+    #wanted-name {
       font-size: 10px;
       letter-spacing: 0.24em;
-      color: rgba(255, 230, 194, 0.76);
+      color: var(--muted);
     }
 
-    .readout span {
-      display: block;
-      margin-bottom: 6px;
-    }
+    #stars { margin-top: 4px; font-size: 20px; letter-spacing: 3px; }
+    .star { color: rgba(255, 230, 196, 0.22); }
+    .star.lit { color: var(--danger); text-shadow: 0 0 14px rgba(255, 71, 103, 0.85); }
 
-    .readout #hud-district {
-      color: var(--cyan);
-      font-size: 12px;
-      letter-spacing: 0.28em;
-    }
+    #center { grid-column: 2; grid-row: 1 / 4; position: relative; }
 
-    .footer {
-      align-self: center;
-      padding: 9px 18px;
-      border: 1px solid var(--line);
+    #crosshair {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 18px;
+      height: 18px;
+      transform: translate(-50%, -50%);
+      opacity: 0.75;
+    }
+    #crosshair::before, #crosshair::after {
+      content: '';
+      position: absolute;
+      background: rgba(255, 238, 205, 0.85);
+    }
+    #crosshair::before { left: 8px; top: 0; width: 2px; height: 18px; }
+    #crosshair::after { top: 8px; left: 0; height: 2px; width: 18px; }
+
+    #prompt {
+      position: absolute;
+      left: 50%;
+      bottom: 21%;
+      transform: translateX(-50%);
+      padding: 8px 18px;
+      border: 1px solid var(--cyan);
       border-radius: 999px;
-      background: var(--glass);
+      background: rgba(12, 20, 34, 0.78);
+      color: var(--cyan);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.22em;
+      opacity: 0;
+      transition: opacity 0.18s;
+      white-space: nowrap;
+    }
+    #prompt.show { opacity: 1; }
+
+    #toast {
+      position: absolute;
+      left: 50%;
+      top: 5%;
+      transform: translateX(-50%);
+      padding: 9px 20px;
+      border: 1px solid var(--gold);
+      border-radius: 8px;
+      background: rgba(30, 17, 30, 0.8);
+      color: var(--gold);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.17em;
+      opacity: 0;
+      transition: opacity 0.2s;
+      white-space: nowrap;
+    }
+    #toast.show { opacity: 1; }
+
+    #dialogue {
+      position: absolute;
+      left: 50%;
+      bottom: 5%;
+      width: min(660px, 62vw);
+      transform: translateX(-50%) translateY(12px);
+      border-left: 3px solid var(--cyan);
+      padding: 11px 16px;
+      background: rgba(12, 9, 24, 0.82);
+      opacity: 0;
+      transition: opacity 0.25s, transform 0.25s;
+    }
+    #dialogue.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    #speaker-name {
       font-size: 10px;
-      letter-spacing: 0.3em;
-      color: rgba(255, 230, 194, 0.82);
-      backdrop-filter: blur(6px);
+      letter-spacing: 0.28em;
+      color: var(--cyan);
+      font-weight: 800;
+    }
+    #dialogue-line { margin-top: 5px; font-size: 13px; line-height: 1.5; }
+
+    #lower-left {
+      grid-column: 1;
+      grid-row: 3;
+      align-self: end;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      max-width: 350px;
     }
 
-    @media (max-width: 700px) {
-      .brand-mark {
-        display: none;
-      }
+    .vitals { padding: 11px 14px; }
+    .vital-row {
+      display: grid;
+      grid-template-columns: 48px 1fr 34px;
+      align-items: center;
+      gap: 8px;
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      color: var(--muted);
+      margin: 4px 0;
+    }
+    .meter { height: 7px; border-radius: 4px; background: rgba(255, 240, 210, 0.14); overflow: hidden; }
+    .meter > div { height: 100%; border-radius: 4px; transition: width 0.15s; }
+    #health-fill { background: linear-gradient(90deg, #ff7c8f, #ffc179); width: 100%; }
+    #armor-fill { background: linear-gradient(90deg, #4bc7ea, #9b8cff); width: 50%; }
 
-      .readout {
-        top: 104px;
-        right: auto;
-        left: 20px;
-        text-align: left;
-      }
+    #weapon-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+    .slot {
+      border: 1px solid var(--edge);
+      border-radius: 8px;
+      background: var(--glass);
+      padding: 7px 5px;
+      text-align: center;
+      opacity: 0.62;
+      transition: opacity 0.15s, border-color 0.15s, transform 0.15s;
+    }
+    .slot.active {
+      opacity: 1;
+      border-color: var(--gold);
+      transform: translateY(-3px);
+      box-shadow: 0 0 18px rgba(255, 186, 110, 0.32);
+    }
+    .slot-key { font-size: 9px; color: var(--gold); font-weight: 800; }
+    .slot-name { font-size: 9px; letter-spacing: 0.1em; margin-top: 3px; }
+    .slot-ammo { font-size: 12px; color: var(--cyan); font-weight: 800; margin-top: 2px; }
 
-      .footer {
-        font-size: 8px;
-        letter-spacing: 0.2em;
-      }
+    #radio { padding: 9px 13px; display: flex; align-items: center; gap: 10px; }
+    #radio-icon { font-size: 18px; color: var(--pink); }
+    #radio-name { font-size: 12px; font-weight: 800; letter-spacing: 0.14em; }
+    #radio-freq, #radio-tag { font-size: 9px; color: var(--muted); letter-spacing: 0.16em; }
+    #radio-state { margin-left: auto; font-size: 9px; color: var(--cyan); letter-spacing: 0.14em; }
+
+    #lower-right {
+      grid-column: 3;
+      grid-row: 3;
+      align-self: end;
+      justify-self: end;
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+    }
+
+    #map-wrap { padding: 7px; border-radius: 50%; }
+    #minimap { width: 178px; height: 178px; display: block; border-radius: 50%; }
+    #map-caption {
+      text-align: center;
+      font-size: 8px;
+      letter-spacing: 0.19em;
+      color: var(--muted);
+      padding-bottom: 4px;
+    }
+
+    #speed-wrap { padding: 7px 10px 4px; text-align: center; }
+    #speedo { width: 172px; height: 104px; display: block; }
+    #speed-value { display: inline; font-size: 25px; font-weight: 800; color: var(--cream); }
+    .speed-unit { font-size: 9px; letter-spacing: 0.2em; color: var(--muted); margin-left: 4px; }
+    #vehicle-label {
+      font-size: 8px;
+      letter-spacing: 0.17em;
+      color: var(--cyan);
+      margin-bottom: 2px;
+    }
+
+    #start {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at 20% 80%, rgba(255, 155, 96, 0.3), transparent 42%),
+        linear-gradient(150deg, rgba(12, 8, 26, 0.94), rgba(42, 19, 47, 0.88));
+      backdrop-filter: blur(5px);
+      transition: opacity 0.4s;
+    }
+    #start.hidden { opacity: 0; pointer-events: none; }
+    .start-card {
+      width: min(720px, 90vw);
+      border: 1px solid var(--edge);
+      border-radius: 18px;
+      background: rgba(18, 12, 32, 0.78);
+      padding: 32px 38px;
+      text-align: center;
+    }
+    .start-card h1 {
+      margin: 0;
+      font-size: clamp(38px, 7vw, 68px);
+      letter-spacing: 0.2em;
+      background: linear-gradient(90deg, var(--gold), var(--pink), var(--cyan));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .start-card h2 {
+      margin: 6px 0 20px;
+      font-size: 10px;
+      letter-spacing: 0.48em;
+      color: var(--muted);
+    }
+    .start-card p { font-size: 13px; line-height: 1.7; color: var(--cream); }
+    .keys {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 5px 22px;
+      margin: 18px 0 24px;
+      text-align: left;
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .keys b { color: var(--gold); }
+    #start-button {
+      pointer-events: auto;
+      cursor: pointer;
+      border: 1px solid var(--gold);
+      border-radius: 999px;
+      padding: 13px 38px;
+      background: linear-gradient(90deg, #ff9f6a, #ff6a9f);
+      color: #21102c;
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 0.22em;
+    }
+    #start-button:hover { filter: brightness(1.12); }
+    .start-foot { margin-top: 15px; font-size: 9px; letter-spacing: 0.2em; color: var(--muted); }
+
+    @media (max-width: 860px) {
+      #hud { padding: 12px; grid-template-columns: 1fr 1fr; }
+      #center { display: none; }
+      #stats { grid-column: 2; }
+      #lower-left { grid-column: 1; }
+      #lower-right { grid-column: 2; }
+      #minimap { width: 118px; height: 118px; }
+      #speedo { width: 120px; height: 74px; }
+      #dialogue { width: 88vw; bottom: 2%; }
     }
   </style>
 </head>
 <body>
-  <canvas id="game"></canvas>
+  <canvas id="scene"></canvas>
+
   <div id="hud">
-    <div class="brand">
-      <span class="brand-mark">KA</span>
-      <div>
-        <h1>KOTA ARUNA</h1>
-        <p>SUNSET HARBOR / CORE SCAFFOLD</p>
+    <section id="mission-card" class="panel">
+      <div class="eyebrow">CERITA KOTA<span id="mission-number">MISSI 01 / 07</span></div>
+      <h2 id="mission-title">SAPA TELUK</h2>
+      <p id="mission-brief">Ara menunggu di pelabuhan.</p>
+      <div id="mission-objective">Pergi ke titik Ara di Teluk Aruna</div>
+      <div class="eyebrow" style="margin-top:9px">BAYARAN <span id="mission-reward">$900</span></div>
+    </section>
+
+    <div id="center">
+      <div id="crosshair"></div>
+      <div id="toast"></div>
+      <div id="prompt">TEKAN E UNTUK MISSI</div>
+      <div id="dialogue">
+        <div id="speaker-name">ARA</div>
+        <div id="dialogue-line"></div>
       </div>
     </div>
-    <div class="readout">
-      <span id="hud-district">TELUK ARUNA</span>
-      <span id="hud-seed">SEED</span>
-    </div>
-    <div class="footer">TWO DISTRICTS / ONE SUNSET / RING ROAD</div>
+
+    <section id="stats" class="panel">
+      <div id="district-name">TELUK ARUNA</div>
+      <div id="district-tag">HARBOR DOWNTOWN</div>
+      <div id="money-value">$2,500</div>
+      <div id="wanted-name">BERSIH</div>
+      <div id="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+    </section>
+
+    <section id="lower-left">
+      <div class="vitals panel">
+        <div class="vital-row"><span>NYAWA</span><div class="meter"><div id="health-fill"></div></div><span>HP</span></div>
+        <div class="vital-row"><span>ARMOR</span><div class="meter"><div id="armor-fill"></div></div><span>AE</span></div>
+      </div>
+      <div id="weapon-grid">
+        <div class="slot active" data-slot="0"><div class="slot-key">1</div><div class="slot-name">FIST</div><div class="slot-ammo">∞</div></div>
+        <div class="slot" data-slot="1"><div class="slot-key">2</div><div class="slot-name">PST</div><div class="slot-ammo">48</div></div>
+        <div class="slot" data-slot="2"><div class="slot-key">3</div><div class="slot-name">SMG</div><div class="slot-ammo">180</div></div>
+        <div class="slot" data-slot="3"><div class="slot-key">4</div><div class="slot-name">RKT</div><div class="slot-ammo">8</div></div>
+      </div>
+      <div id="radio" class="panel">
+        <div id="radio-icon">♫</div>
+        <div>
+          <div id="radio-name">ARUNA FM</div>
+          <div><span id="radio-freq">98.4 FM</span> · <span id="radio-tag">harbor soul</span></div>
+        </div>
+        <div id="radio-state">○ OFF</div>
+      </div>
+    </section>
+
+    <section id="lower-right">
+      <div id="map-wrap" class="panel">
+        <canvas id="minimap" width="356" height="356"></canvas>
+        <div id="map-caption">PETA KOTA / DUA DISTRIK</div>
+      </div>
+      <div id="speed-wrap" class="panel">
+        <div id="vehicle-label">JALAN KAKI</div>
+        <canvas id="speedo" width="344" height="208"></canvas>
+        <div><span id="speed-value">0</span><span class="speed-unit">KM/J</span></div>
+      </div>
+    </section>
   </div>
+
+  <div id="start">
+    <div class="start-card">
+      <h1>KOTA ARUNA</h1>
+      <h2>SEASIDE CRIME STORIES</h2>
+      <p>Dua distrik, tujuh misi, satu rahasia yang berubah saat air pasang.
+        Jelajahi Teluk Aruna dan Marina Senja, bawa mobil atau helikopter dengan sorotan,
+        dan selesaikan cerita bersama Ara, Dimas, Sinta dan Bimo.</p>
+      <div class="keys">
+        <div><b>WASD</b> — jalan / setir / terbang</div>
+        <div><b>SHIFT</b> — lari · <b>SPACE</b> — rem / naik</div>
+        <div><b>F</b> — masuk mobil · <b>H</b> — helikopter</div>
+        <div><b>C</b> — turun · <b>L</b> — sorotan heli</div>
+        <div><b>E</b> — misi · <b>1-4</b> — senjata</div>
+        <div><b>KLIK / CTRL</b> — tembak · <b>R/M</b> — radio</div>
+      </div>
+      <button id="start-button" type="button">MULAI PETUALANGAN</button>
+      <div class="start-foot">TUJUH MISSI · DUA DISTRIK · SATU PASANG SURUT</div>
+    </div>
+  </div>
+
   <script type="importmap">
-    {
-      "imports": {
-        "three": "./vendor/three.module.min.js"
-      }
-    }
+    { "imports": { "three": "./vendor/three.module.min.js" } }
   </script>
   <script type="module" src="./src/main.js"></script>
 </body>
