@@ -1,48 +1,56 @@
+[![make.fun · gta6-01](https://make.fun/badge/gta6-01.svg)](https://make.fun/bounty/gta6-01?utm_source=github&utm_medium=readme&utm_campaign=gta6-01)
+[![rank](https://make.fun/badge/gta6-01/lindaayu1200/kota-aruna/rank.svg)](https://make.fun/bounty/gta6-01/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=gta6-01)
+[![reward](https://make.fun/badge/gta6-01/lindaayu1200/kota-aruna/reward.svg)](https://make.fun/bounty/gta6-01?utm_source=github&utm_medium=readme&utm_campaign=gta6-01)
+
 # KOTA ARUNA
 
-KOTA ARUNA is a self-contained three.js crime game set on a fictional Indonesian
-harbor coast at sunset. Two districts share one ring road: **Teluk Aruna**, a
-dense downtown of lit towers, cranes and shipping sheds, and **Marina Senja**,
-a beach district of pastel houses, palms and a long wooden pier. Everything is
-static and local — no build step, no accounts, no network requests at runtime.
+An offline three.js crime sandbox on a fictional Indonesian harbor coast at
+sunset. Two districts share one ring road: **Teluk Aruna**, a downtown of lit
+towers, cranes and shipping sheds, and **Marina Senja**, a beach district of
+pastel houses, palms and a long wooden pier.
+
+Everything runs locally from static files. No build step, no account, no network
+requests while playing.
 
 ## Story
 
-Ara, Dimas, Sinta and Bimo take jobs across the coast: a pickup at the harbor,
-a package on the beach, a tail along the ring road, a searchlight run to the
-lighthouse, a fight at the old pier and an ambush on the channel bridge. The
-seventh job, **Pasang Surut**, turns the story around: Sinta reveals she fed the
-employers the tide tables, and the crew decides to flip the deal and leave the
-city together. Mission dialogue, the finale and this README all carry that twist.
+Ara, Dimas, Sinta and Bimo take seven jobs around the coast. The work starts
+with a car key at the harbor and moves through a beach package, a courier tail,
+a searchlight flight to the lighthouse, a fight on the old pier and an ambush on
+the channel bridge. The last job, **Pasang Surut**, turns it all around: Sinta
+admits she fed the employers the tide tables, and the crew flips the deal
+instead of taking the fall.
 
-## Features
+## What is in the game
 
-- Third-person walking, arcade driving and a flyable helicopter
-- Helicopter searchlight with volumetric-style beam and a real spot light
-- Five wanted stars, decaying heat, and police cars that give chase
-- Money rewards, car bounties and a full mission chain of seven story jobs
-- In-game procedural radio with three stations (R to change, M to mute)
-- Four weapon slots: fists, pistol, SMG and a rocket launcher (1-4, click to fire)
-- Minimap with roads, mission marker, police dots and both district labels
-- Analog speedometer, health and armor bars, live district and money readouts
-- Seeded city generator: the same `?seed=` always produces the same skyline
+- Walk, drive or fly a third-person helicopter around a seeded open world
+- Helicopter searchlight with a real spot light and a soft cone
+- Five wanted stars, cooldown, and patrol cars that hunt you down
+- Cash rewards, bounties on police cars, and a full seven-mission chain
+- Procedural in-game radio with three stations (R cycles, M mutes)
+- Four weapon slots: fists, pistol, SMG and rocket launcher (1-4, click to fire)
+- Round minimap with roads, both district labels, markers and patrol dots
+- Analog speedometer, health and armor meters, live cash and district readout
+- Deterministic `?seed=` so a number always rebuilds the same skyline
 
-## Play
+## Run it
 
-Serve `game/` with any static server, then open `game/index.html`:
+Serve `game/` as static files and open `index.html`. The included development
+server needs only Node:
 
 ```sh
 node serve.ts
 ```
 
-Append `?seed=1337` for a fixed layout. The four screenshots can be reproduced
-with `?shot=cover`, `?shot=chase`, `?shot=marina` and `?shot=finale`.
+Then visit `http://localhost:8080/`. Add `?seed=1337` for a fixed city. The
+four captures can be recreated with `?shot=harbor`, `?shot=pursuit`,
+`?shot=beam` and `?shot=tide`.
 
 ### Controls
 
 | Key | Action |
 | --- | --- |
-| WASD | Move / steer / fly |
+| WASD | Move, steer or fly |
 | Shift | Sprint on foot |
 | Space | Handbrake in a car, climb in a helicopter |
 | C or Ctrl | Descend in a helicopter |
@@ -55,23 +63,27 @@ with `?shot=cover`, `?shot=chase`, `?shot=marina` and `?shot=finale`.
 | R / M | Next radio station / mute |
 | P | Pause |
 
-## Layout
+## Repository map
 
-- `game/index.html` — canvas, import map and the whole HUD
-- `game/src/config.js` — districts, palette, crew, missions, weapons, radio
-- `game/src/random.js` — seeded xorshift generator used by the world builder
-- `game/src/city.js` — terrain, sea, roads, towers, houses, palms, pier, lights
-- `game/src/main.js` — simulation, vehicles, combat, wanted level, HUD and camera
-- `game/vendor/three.module.min.js` — vendored three.js, loaded offline
-- `screenshots/` — four 1280x720 JPEG captures, listed in `shots.json`
+- `game/index.html` — page, import map and the complete HUD
+- `game/src/config.js` — districts, crew, jobs, guns, radio and tuning
+- `game/src/random.js` — seeded generator for repeatable worlds
+- `game/src/city.js` — terrain, water, roads, skyline, houses, palms and pier
+- `game/src/main.js` — simulation, vehicles, combat, wanted level and HUD
+- `game/vendor/three.module.min.js` — vendored three.js, loaded without network
+- `screenshots/` — four 1280x720 JPEG renders listed in `shots.json`
 
-## Package for hand-in
+## Hand-in package
 
 ```sh
 mkdir -p out
 MAKEFUN_OUTPUT_DIR=out node main.ts
 ```
 
-`main.ts` resolves its own directory with `fileURLToPath`, copies `game/` and
-`screenshots/` to the output directory and writes a deterministic `dossier.json`
-with the competition caps. Running it twice produces byte-identical output.
+`main.ts` resolves its own folder with `fileURLToPath`, copies `game/` and
+`screenshots/` into the output folder and writes a deterministic `dossier.json`
+within the competition caps. Two consecutive runs produce byte-identical
+output.
+
+See the [make.fun gta6-01 bounty](https://make.fun/bounty/gta6-01) for the
+challenge this entry was built for.

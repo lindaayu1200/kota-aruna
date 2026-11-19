@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="id">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -7,148 +7,91 @@
   <title>KOTA ARUNA — Seaside Crime Stories</title>
   <style>
     :root {
-      --night: #120d22;
-      --cream: #ffe6c4;
-      --muted: rgba(255, 230, 196, 0.66);
-      --gold: #ffc179;
-      --cyan: #6aeaf6;
-      --pink: #ff71ae;
-      --danger: #ff526f;
-      --glass: rgba(18, 13, 32, 0.62);
-      --edge: rgba(255, 221, 178, 0.26);
+      --ink: #fff0d6;
+      --dim: rgba(255, 240, 214, 0.64);
+      --amber: #ffbe78;
+      --aqua: #6aeaf6;
+      --rose: #ff71ae;
+      --alarm: #ff4d6d;
+      --panel: rgba(14, 12, 30, 0.68);
+      --rim: rgba(255, 214, 166, 0.25);
     }
 
     * { box-sizing: border-box; }
 
     html, body {
+      margin: 0;
       width: 100%;
       height: 100%;
-      margin: 0;
       overflow: hidden;
       background: #241637;
-      color: var(--cream);
+      color: var(--ink);
       font-family: "Trebuchet MS", "Segoe UI", system-ui, sans-serif;
       -webkit-font-smoothing: antialiased;
     }
 
-    #scene {
+    #view {
       position: fixed;
       inset: 0;
+      display: block;
       width: 100vw;
       height: 100vh;
-      display: block;
-      touch-action: none;
       outline: none;
+      touch-action: none;
     }
 
     #hud {
       position: fixed;
       inset: 0;
-      z-index: 5;
-      pointer-events: none;
-      padding: 22px;
+      z-index: 4;
       display: grid;
       grid-template-columns: minmax(260px, 1fr) auto minmax(260px, 1fr);
       grid-template-rows: auto 1fr auto;
       gap: 12px;
-      background: linear-gradient(180deg, rgba(13, 8, 24, 0.5), transparent 24%, transparent 72%, rgba(13, 8, 24, 0.55));
-      text-shadow: 0 2px 9px rgba(8, 4, 18, 0.8);
+      padding: 22px;
+      pointer-events: none;
+      background: linear-gradient(180deg, rgba(12, 8, 24, 0.48), transparent 24%, transparent 72%, rgba(12, 8, 24, 0.55));
+      text-shadow: 0 2px 9px rgba(8, 4, 18, 0.85);
     }
 
-    .panel {
-      border: 1px solid var(--edge);
-      background: var(--glass);
-      border-radius: 12px;
+    .box {
+      border: 1px solid var(--rim);
+      background: var(--panel);
+      clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+      box-shadow: inset 0 1px 0 rgba(255, 240, 210, 0.08);
       backdrop-filter: blur(7px);
-      box-shadow: 0 10px 30px rgba(8, 4, 18, 0.28), inset 0 1px 0 rgba(255, 240, 210, 0.08);
     }
 
-    #mission-card {
-      grid-column: 1;
-      grid-row: 1;
-      max-width: 360px;
-      padding: 13px 16px 15px;
-      border-left: 3px solid var(--pink);
-    }
-
-    .eyebrow {
+    .small {
       font-size: 9px;
       letter-spacing: 0.26em;
-      color: var(--gold);
       font-weight: 800;
+      color: var(--amber);
     }
 
-    #mission-number { float: right; color: var(--cyan); }
-
-    #mission-title {
-      margin: 8px 0 4px;
-      font-size: 24px;
-      letter-spacing: 0.13em;
-      font-weight: 800;
+    #job-card {
+      grid-area: 1 / 1;
+      max-width: 360px;
+      padding: 13px 16px 15px;
+      border-left: 3px solid var(--rose);
     }
 
-    #mission-brief {
-      margin: 0;
-      font-size: 11px;
-      line-height: 1.45;
-      color: var(--muted);
-    }
+    #job-number { float: right; color: var(--aqua); }
+    #job-headline { margin: 9px 0 4px; font-size: 24px; letter-spacing: 0.12em; }
+    #job-story { margin: 0; font-size: 11px; line-height: 1.45; color: var(--dim); }
 
-    #mission-objective {
+    #job-task {
       margin-top: 10px;
       padding-top: 9px;
-      border-top: 1px dashed rgba(255, 220, 180, 0.24);
+      border-top: 1px dashed rgba(255, 220, 180, 0.25);
       font-size: 11px;
-      color: var(--cream);
     }
+    #job-task::before { content: '› '; color: var(--aqua); }
+    #job-pay { float: right; color: var(--amber); }
 
-    #mission-objective::before { content: '▸ '; color: var(--cyan); }
-    #mission-reward { float: right; color: var(--gold); font-weight: 800; }
+    #center-column { grid-area: 1 / 2 / 4 / 3; position: relative; }
 
-    #stats {
-      grid-column: 3;
-      grid-row: 1;
-      justify-self: end;
-      text-align: right;
-      padding: 12px 16px;
-      min-width: 260px;
-    }
-
-    #district-name {
-      font-size: 20px;
-      letter-spacing: 0.2em;
-      font-weight: 800;
-      color: var(--cyan);
-    }
-
-    #district-tag {
-      font-size: 9px;
-      letter-spacing: 0.3em;
-      color: var(--muted);
-      margin-top: 2px;
-    }
-
-    #money-value {
-      font-size: 27px;
-      font-weight: 800;
-      color: var(--gold);
-      margin-top: 6px;
-      letter-spacing: 0.04em;
-    }
-
-    #wanted-name {
-      font-size: 10px;
-      letter-spacing: 0.24em;
-      color: var(--muted);
-    }
-
-    #stars { margin-top: 4px; font-size: 20px; letter-spacing: 3px; }
-    .star { color: rgba(255, 230, 196, 0.22); }
-    .star.lit { color: var(--danger); text-shadow: 0 0 14px rgba(255, 71, 103, 0.85); }
-
-    #center { grid-column: 2; grid-row: 1 / 4; position: relative; }
-
-    #crosshair {
+    #aim {
       position: absolute;
       left: 50%;
       top: 50%;
@@ -157,76 +100,85 @@
       transform: translate(-50%, -50%);
       opacity: 0.75;
     }
-    #crosshair::before, #crosshair::after {
+    #aim::before, #aim::after {
       content: '';
       position: absolute;
-      background: rgba(255, 238, 205, 0.85);
+      background: rgba(255, 238, 205, 0.9);
     }
-    #crosshair::before { left: 8px; top: 0; width: 2px; height: 18px; }
-    #crosshair::after { top: 8px; left: 0; height: 2px; width: 18px; }
+    #aim::before { left: 8px; top: 0; width: 2px; height: 18px; }
+    #aim::after { top: 8px; left: 0; width: 18px; height: 2px; }
 
-    #prompt {
+    #hint {
       position: absolute;
       left: 50%;
       bottom: 21%;
       transform: translateX(-50%);
       padding: 8px 18px;
-      border: 1px solid var(--cyan);
+      border: 1px solid var(--aqua);
       border-radius: 999px;
-      background: rgba(12, 20, 34, 0.78);
-      color: var(--cyan);
+      background: rgba(12, 20, 34, 0.8);
+      color: var(--aqua);
       font-size: 11px;
       font-weight: 800;
       letter-spacing: 0.22em;
+      white-space: nowrap;
       opacity: 0;
       transition: opacity 0.18s;
-      white-space: nowrap;
     }
-    #prompt.show { opacity: 1; }
+    #hint.show { opacity: 1; }
 
-    #toast {
+    #bulletin {
       position: absolute;
       left: 50%;
       top: 5%;
       transform: translateX(-50%);
       padding: 9px 20px;
-      border: 1px solid var(--gold);
+      border: 1px solid var(--amber);
       border-radius: 8px;
-      background: rgba(30, 17, 30, 0.8);
-      color: var(--gold);
+      background: rgba(30, 17, 30, 0.82);
+      color: var(--amber);
       font-size: 11px;
       font-weight: 800;
       letter-spacing: 0.17em;
+      white-space: nowrap;
       opacity: 0;
       transition: opacity 0.2s;
-      white-space: nowrap;
     }
-    #toast.show { opacity: 1; }
+    #bulletin.show { opacity: 1; }
 
-    #dialogue {
+    #talk {
       position: absolute;
       left: 50%;
       bottom: 5%;
       width: min(660px, 62vw);
       transform: translateX(-50%) translateY(12px);
-      border-left: 3px solid var(--cyan);
+      border-left: 3px solid var(--aqua);
       padding: 11px 16px;
-      background: rgba(12, 9, 24, 0.82);
+      background: rgba(12, 9, 24, 0.84);
       opacity: 0;
       transition: opacity 0.25s, transform 0.25s;
     }
-    #dialogue.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-    #speaker-name {
-      font-size: 10px;
-      letter-spacing: 0.28em;
-      color: var(--cyan);
-      font-weight: 800;
-    }
-    #dialogue-line { margin-top: 5px; font-size: 13px; line-height: 1.5; }
+    #talk.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    #talk-name { font-size: 10px; letter-spacing: 0.28em; color: var(--aqua); font-weight: 800; }
+    #talk-text { margin-top: 5px; font-size: 13px; line-height: 1.5; }
 
-    #lower-left {
-      grid-column: 1;
-      grid-row: 3;
+    #status {
+      grid-area: 1 / 3;
+      justify-self: end;
+      min-width: 260px;
+      padding: 12px 16px;
+      text-align: right;
+    }
+    #zone-name { font-size: 20px; letter-spacing: 0.2em; font-weight: 800; color: var(--aqua); }
+    #zone-note { font-size: 9px; letter-spacing: 0.3em; color: var(--dim); margin-top: 2px; }
+    #cash { margin-top: 6px; font-size: 27px; font-weight: 800; color: var(--amber); letter-spacing: 0.04em; }
+    #heat-label { font-size: 10px; letter-spacing: 0.24em; color: var(--dim); }
+    #star-row { margin-top: 4px; font-size: 20px; letter-spacing: 3px; }
+    .heat-star { color: rgba(255, 230, 196, 0.22); }
+    .heat-star.lit { color: var(--alarm); text-shadow: 0 0 14px rgba(255, 71, 103, 0.85); }
+
+    #left-stack {
+      grid-area: 3 / 1;
       align-self: end;
       display: flex;
       flex-direction: column;
@@ -234,130 +186,102 @@
       max-width: 350px;
     }
 
-    .vitals { padding: 11px 14px; }
-    .vital-row {
-      display: grid;
-      grid-template-columns: 48px 1fr 34px;
-      align-items: center;
-      gap: 8px;
-      font-size: 9px;
-      letter-spacing: 0.2em;
-      color: var(--muted);
-      margin: 4px 0;
-    }
-    .meter { height: 7px; border-radius: 4px; background: rgba(255, 240, 210, 0.14); overflow: hidden; }
-    .meter > div { height: 100%; border-radius: 4px; transition: width 0.15s; }
-    #health-fill { background: linear-gradient(90deg, #ff7c8f, #ffc179); width: 100%; }
-    #armor-fill { background: linear-gradient(90deg, #4bc7ea, #9b8cff); width: 50%; }
+    #vitals { padding: 11px 14px; }
+    .vital { display: grid; grid-template-columns: 48px 1fr 34px; align-items: center; gap: 8px; font-size: 9px; letter-spacing: 0.2em; color: var(--dim); margin: 4px 0; }
+    .track { height: 7px; border-radius: 4px; background: rgba(255, 240, 210, 0.14); overflow: hidden; }
+    .track > div { height: 100%; border-radius: 4px; transition: width 0.15s; }
+    #life-fill { width: 100%; background: linear-gradient(90deg, #ff7c8f, #ffc179); }
+    #vest-fill { width: 50%; background: linear-gradient(90deg, #4bc7ea, #9b8cff); }
 
-    #weapon-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
-    .slot {
-      border: 1px solid var(--edge);
+    #gun-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+    .gun-slot {
+      border: 1px solid var(--rim);
       border-radius: 8px;
-      background: var(--glass);
+      background: var(--panel);
       padding: 7px 5px;
       text-align: center;
       opacity: 0.62;
       transition: opacity 0.15s, border-color 0.15s, transform 0.15s;
     }
-    .slot.active {
+    .gun-slot.active {
       opacity: 1;
-      border-color: var(--gold);
+      border-color: var(--amber);
       transform: translateY(-3px);
       box-shadow: 0 0 18px rgba(255, 186, 110, 0.32);
     }
-    .slot-key { font-size: 9px; color: var(--gold); font-weight: 800; }
-    .slot-name { font-size: 9px; letter-spacing: 0.1em; margin-top: 3px; }
-    .slot-ammo { font-size: 12px; color: var(--cyan); font-weight: 800; margin-top: 2px; }
+    .gun-key { font-size: 9px; color: var(--amber); font-weight: 800; }
+    .gun-name { font-size: 9px; letter-spacing: 0.1em; margin-top: 3px; }
+    .gun-count { font-size: 12px; color: var(--aqua); font-weight: 800; margin-top: 2px; }
 
     #radio { padding: 9px 13px; display: flex; align-items: center; gap: 10px; }
-    #radio-icon { font-size: 18px; color: var(--pink); }
-    #radio-name { font-size: 12px; font-weight: 800; letter-spacing: 0.14em; }
-    #radio-freq, #radio-tag { font-size: 9px; color: var(--muted); letter-spacing: 0.16em; }
-    #radio-state { margin-left: auto; font-size: 9px; color: var(--cyan); letter-spacing: 0.14em; }
+    #radio-mark { font-size: 18px; color: var(--rose); }
+    #station-name { font-size: 12px; font-weight: 800; letter-spacing: 0.14em; }
+    #station-dial, #station-mood { font-size: 9px; color: var(--dim); letter-spacing: 0.16em; }
+    #station-state { margin-left: auto; font-size: 9px; color: var(--aqua); letter-spacing: 0.14em; }
 
-    #lower-right {
-      grid-column: 3;
-      grid-row: 3;
+    #right-stack {
+      grid-area: 3 / 3;
       align-self: end;
       justify-self: end;
       display: flex;
       align-items: flex-end;
       gap: 10px;
     }
+    #map-holder { padding: 7px; border-radius: 50%; }
+    #map-canvas { display: block; width: 178px; height: 178px; border-radius: 50%; }
+    #map-note { text-align: center; font-size: 8px; letter-spacing: 0.19em; color: var(--dim); padding-bottom: 4px; }
+    #dial-holder { padding: 7px 10px 4px; text-align: center; }
+    #dial-canvas { display: block; width: 172px; height: 104px; }
+    #vehicle-readout { font-size: 8px; letter-spacing: 0.17em; color: var(--aqua); margin-bottom: 2px; }
+    #speed-readout { font-size: 25px; font-weight: 800; }
+    .unit { font-size: 9px; letter-spacing: 0.2em; color: var(--dim); margin-left: 4px; }
 
-    #map-wrap { padding: 7px; border-radius: 50%; }
-    #minimap { width: 178px; height: 178px; display: block; border-radius: 50%; }
-    #map-caption {
-      text-align: center;
-      font-size: 8px;
-      letter-spacing: 0.19em;
-      color: var(--muted);
-      padding-bottom: 4px;
-    }
-
-    #speed-wrap { padding: 7px 10px 4px; text-align: center; }
-    #speedo { width: 172px; height: 104px; display: block; }
-    #speed-value { display: inline; font-size: 25px; font-weight: 800; color: var(--cream); }
-    .speed-unit { font-size: 9px; letter-spacing: 0.2em; color: var(--muted); margin-left: 4px; }
-    #vehicle-label {
-      font-size: 8px;
-      letter-spacing: 0.17em;
-      color: var(--cyan);
-      margin-bottom: 2px;
-    }
-
-    #start {
+    #intro {
       position: fixed;
       inset: 0;
       z-index: 20;
       display: grid;
       place-items: center;
       background:
-        radial-gradient(circle at 20% 80%, rgba(255, 155, 96, 0.3), transparent 42%),
+        radial-gradient(circle at 18% 82%, rgba(255, 155, 96, 0.3), transparent 42%),
         linear-gradient(150deg, rgba(12, 8, 26, 0.94), rgba(42, 19, 47, 0.88));
       backdrop-filter: blur(5px);
       transition: opacity 0.4s;
     }
-    #start.hidden { opacity: 0; pointer-events: none; }
-    .start-card {
+    #intro.hidden { opacity: 0; pointer-events: none; }
+    .card {
       width: min(720px, 90vw);
-      border: 1px solid var(--edge);
+      border: 1px solid var(--rim);
       border-radius: 18px;
-      background: rgba(18, 12, 32, 0.78);
+      background: rgba(18, 12, 32, 0.8);
       padding: 32px 38px;
       text-align: center;
     }
-    .start-card h1 {
+    .card h1 {
       margin: 0;
       font-size: clamp(38px, 7vw, 68px);
       letter-spacing: 0.2em;
-      background: linear-gradient(90deg, var(--gold), var(--pink), var(--cyan));
+      background: linear-gradient(90deg, var(--amber), var(--rose), var(--aqua));
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
     }
-    .start-card h2 {
-      margin: 6px 0 20px;
-      font-size: 10px;
-      letter-spacing: 0.48em;
-      color: var(--muted);
-    }
-    .start-card p { font-size: 13px; line-height: 1.7; color: var(--cream); }
-    .keys {
+    .card h2 { margin: 6px 0 20px; font-size: 10px; letter-spacing: 0.48em; color: var(--dim); }
+    .card p { font-size: 13px; line-height: 1.7; }
+    .controls {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 5px 22px;
       margin: 18px 0 24px;
       text-align: left;
       font-size: 11px;
-      color: var(--muted);
+      color: var(--dim);
     }
-    .keys b { color: var(--gold); }
-    #start-button {
+    .controls b { color: var(--amber); }
+    #launch {
       pointer-events: auto;
       cursor: pointer;
-      border: 1px solid var(--gold);
+      border: 1px solid var(--amber);
       border-radius: 999px;
       padding: 13px 38px;
       background: linear-gradient(90deg, #ff9f6a, #ff6a9f);
@@ -366,93 +290,94 @@
       font-weight: 900;
       letter-spacing: 0.22em;
     }
-    #start-button:hover { filter: brightness(1.12); }
-    .start-foot { margin-top: 15px; font-size: 9px; letter-spacing: 0.2em; color: var(--muted); }
+    #launch:hover { filter: brightness(1.12); }
+    .foot { margin-top: 15px; font-size: 9px; letter-spacing: 0.2em; color: var(--dim); }
 
     @media (max-width: 860px) {
       #hud { padding: 12px; grid-template-columns: 1fr 1fr; }
-      #center { display: none; }
-      #stats { grid-column: 2; }
-      #lower-left { grid-column: 1; }
-      #lower-right { grid-column: 2; }
-      #minimap { width: 118px; height: 118px; }
-      #speedo { width: 120px; height: 74px; }
-      #dialogue { width: 88vw; bottom: 2%; }
+      #center-column { display: none; }
+      #status { grid-area: 1 / 2; }
+      #left-stack { grid-area: 3 / 1; }
+      #right-stack { grid-area: 3 / 2; }
+      #map-canvas { width: 118px; height: 118px; }
+      #dial-canvas { width: 120px; height: 74px; }
+      #talk { width: 88vw; bottom: 2%; }
     }
   </style>
 </head>
 <body>
-  <canvas id="scene"></canvas>
+  <canvas id="view"></canvas>
 
   <div id="hud">
-    <section id="mission-card" class="panel">
-      <div class="eyebrow">CERITA KOTA<span id="mission-number">MISSI 01 / 07</span></div>
-      <h2 id="mission-title">SAPA TELUK</h2>
-      <p id="mission-brief">Ara menunggu di pelabuhan.</p>
-      <div id="mission-objective">Pergi ke titik Ara di Teluk Aruna</div>
-      <div class="eyebrow" style="margin-top:9px">BAYARAN <span id="mission-reward">$900</span></div>
+    <section id="job-card" class="box">
+      <div class="small">CERITA KOTA<span id="job-number">01 / 07</span></div>
+      <h2 id="job-headline">SAPA TELUK</h2>
+      <p id="job-story">Ara menunggu di gudang pelabuhan.</p>
+      <div id="job-task">Temui Ara di Teluk Aruna</div>
+      <div class="small" style="margin-top:9px">BAYARAN <span id="job-pay">$900</span></div>
+      <div class="small" id="job-tag" hidden>CERITA KOTA</div>
     </section>
 
-    <div id="center">
-      <div id="crosshair"></div>
-      <div id="toast"></div>
-      <div id="prompt">TEKAN E UNTUK MISSI</div>
-      <div id="dialogue">
-        <div id="speaker-name">ARA</div>
-        <div id="dialogue-line"></div>
+    <div id="center-column">
+      <div id="aim"></div>
+      <div id="bulletin"></div>
+      <div id="hint">TEKAN E UNTUK MISSI</div>
+      <div id="talk">
+        <div id="talk-name">ARA</div>
+        <div id="talk-text"></div>
       </div>
     </div>
 
-    <section id="stats" class="panel">
-      <div id="district-name">TELUK ARUNA</div>
-      <div id="district-tag">HARBOR DOWNTOWN</div>
-      <div id="money-value">$2,500</div>
-      <div id="wanted-name">BERSIH</div>
-      <div id="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+    <section id="status" class="box">
+      <div id="zone-name">TELUK ARUNA</div>
+      <div id="zone-note">HARBOR DOWNTOWN</div>
+      <div id="cash">$2,500</div>
+      <div id="heat-label">BERSIH</div>
+      <div id="star-row"><span class="heat-star">★</span><span class="heat-star">★</span><span class="heat-star">★</span><span class="heat-star">★</span><span class="heat-star">★</span></div>
     </section>
 
-    <section id="lower-left">
-      <div class="vitals panel">
-        <div class="vital-row"><span>NYAWA</span><div class="meter"><div id="health-fill"></div></div><span>HP</span></div>
-        <div class="vital-row"><span>ARMOR</span><div class="meter"><div id="armor-fill"></div></div><span>AE</span></div>
+    <section id="left-stack">
+      <div id="vitals" class="box">
+        <div class="vital"><span>NYAWA</span><div class="track"><div id="life-fill"></div></div><span>HP</span></div>
+        <div class="vital"><span>ARMOR</span><div class="track"><div id="vest-fill"></div></div><span>AE</span></div>
       </div>
-      <div id="weapon-grid">
-        <div class="slot active" data-slot="0"><div class="slot-key">1</div><div class="slot-name">FIST</div><div class="slot-ammo">∞</div></div>
-        <div class="slot" data-slot="1"><div class="slot-key">2</div><div class="slot-name">PST</div><div class="slot-ammo">48</div></div>
-        <div class="slot" data-slot="2"><div class="slot-key">3</div><div class="slot-name">SMG</div><div class="slot-ammo">180</div></div>
-        <div class="slot" data-slot="3"><div class="slot-key">4</div><div class="slot-name">RKT</div><div class="slot-ammo">8</div></div>
+      <div id="gun-row">
+        <div class="gun-slot" data-slot="0"><div class="gun-key">1</div><div class="gun-name">FIST</div><div class="gun-count">∞</div></div>
+        <div class="gun-slot active" data-slot="1"><div class="gun-key">2</div><div class="gun-name">PST</div><div class="gun-count">48</div></div>
+        <div class="gun-slot" data-slot="2"><div class="gun-key">3</div><div class="gun-name">SMG</div><div class="gun-count">180</div></div>
+        <div class="gun-slot" data-slot="3"><div class="gun-key">4</div><div class="gun-name">RKT</div><div class="gun-count">8</div></div>
       </div>
-      <div id="radio" class="panel">
-        <div id="radio-icon">♫</div>
+      <div id="radio" class="box">
+        <div id="radio-mark">♫</div>
         <div>
-          <div id="radio-name">ARUNA FM</div>
-          <div><span id="radio-freq">98.4 FM</span> · <span id="radio-tag">harbor soul</span></div>
+          <div id="station-name">ARUNA FM</div>
+          <div><span id="station-dial">98.4 FM</span> · <span id="station-mood">harbor soul</span></div>
         </div>
-        <div id="radio-state">○ OFF</div>
+        <div id="station-state">○ OFF</div>
       </div>
     </section>
 
-    <section id="lower-right">
-      <div id="map-wrap" class="panel">
-        <canvas id="minimap" width="356" height="356"></canvas>
-        <div id="map-caption">PETA KOTA / DUA DISTRIK</div>
+    <section id="right-stack">
+      <div id="map-holder" class="box">
+        <canvas id="map-canvas" width="356" height="356"></canvas>
+        <div id="map-note">PETA KOTA / DUA DISTRIK</div>
       </div>
-      <div id="speed-wrap" class="panel">
-        <div id="vehicle-label">JALAN KAKI</div>
-        <canvas id="speedo" width="344" height="208"></canvas>
-        <div><span id="speed-value">0</span><span class="speed-unit">KM/J</span></div>
+      <div id="dial-holder" class="box">
+        <div id="vehicle-readout">JALAN KAKI</div>
+        <canvas id="dial-canvas" width="344" height="208"></canvas>
+        <div><span id="speed-readout">0</span><span class="unit">KM/J</span></div>
       </div>
     </section>
   </div>
 
-  <div id="start">
-    <div class="start-card">
+  <div id="intro">
+    <div class="card">
       <h1>KOTA ARUNA</h1>
       <h2>SEASIDE CRIME STORIES</h2>
-      <p>Dua distrik, tujuh misi, satu rahasia yang berubah saat air pasang.
-        Jelajahi Teluk Aruna dan Marina Senja, bawa mobil atau helikopter dengan sorotan,
-        dan selesaikan cerita bersama Ara, Dimas, Sinta dan Bimo.</p>
-      <div class="keys">
+      <p>Dua distrik, tujuh misi, satu rahasia yang berubah saat pasang surut.
+        Jelajahi Teluk Aruna dan Marina Senja bersama Ara, Dimas, Sinta dan Bimo.
+        Mobil, helikopter bersorotan, radio, dan lima bintang kejaran menanti.</p>
+      <div class="controls">
         <div><b>WASD</b> — jalan / setir / terbang</div>
         <div><b>SHIFT</b> — lari · <b>SPACE</b> — rem / naik</div>
         <div><b>F</b> — masuk mobil · <b>H</b> — helikopter</div>
@@ -460,8 +385,8 @@
         <div><b>E</b> — misi · <b>1-4</b> — senjata</div>
         <div><b>KLIK / CTRL</b> — tembak · <b>R/M</b> — radio</div>
       </div>
-      <button id="start-button" type="button">MULAI PETUALANGAN</button>
-      <div class="start-foot">TUJUH MISSI · DUA DISTRIK · SATU PASANG SURUT</div>
+      <button id="launch" type="button">MULAI PETUALANGAN</button>
+      <div class="foot">TUJUH MISSI · DUA DISTRIK · SATU PASANG SURUT</div>
     </div>
   </div>
 
