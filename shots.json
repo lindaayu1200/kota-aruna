@@ -1,27 +1,28 @@
 {
   "title": "KOTA ARUNA",
   "seed": 1337,
-  "captured": "Desktop Chrome at 1280x720, staged through the game's own ?shot parameter",
+  "resolution": "1280x720",
+  "format": "JPEG",
   "shots": [
     {
-      "file": "1-cover.jpg",
+      "file": "01-harbor.jpg",
       "shot": "cover",
-      "label": "Sunset over Teluk Aruna from the sports car: cash, respect, stars, radio, minimap district labels and the first contract"
+      "label": "Sunset over Teluk Aruna from the Aruna GT, with cash, respect, radio, minimap district labels and the first contract in view"
     },
     {
-      "file": "2-chase.jpg",
+      "file": "02-pursuit.jpg",
       "shot": "chase",
-      "label": "Four-star pursuit with patrol cruisers, sirens and the police helicopter's searchlight over the harbour"
+      "label": "Four-star pursuit across the north bridge with patrol cruisers, sirens and the wanted meter lit"
     },
     {
-      "file": "3-marina.jpg",
-      "shot": "marina",
-      "label": "On foot at Marina Senja beside the beach, with the seven-contract crew ledger open"
+      "file": "03-crew.jpg",
+      "shot": "crew",
+      "label": "The crew ledger at Marina Senja, listing all seven contracts including the Pasang Surut finale"
     },
     {
-      "file": "4-finale.jpg",
+      "file": "04-finale.jpg",
       "shot": "finale",
-      "label": "The Pasang Surut reveal above the water, with the player's chopper and its searchlight in flight"
+      "label": "The Coastal Hawk above the Aruna Channel with its searchlight on during the Pasang Surut reveal"
     }
   ]
 }

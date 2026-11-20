@@ -3,17 +3,213 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Block Dodger</title>
+<title>KOTA ARUNA — Two Districts, One Tide</title>
+<link rel="icon" href="data:,">
 <style>
-  html, body { margin: 0; height: 100%; overflow: hidden; background: #11141b; }
-  #game { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
-  /* Read aloud, never shown: the status line screen readers announce. */
+  :root {
+    --amber: #ffb764;
+    --mint: #65e2d0;
+    --red: #ff6f61;
+    --ink: #0b121a;
+    --panel: rgba(9, 17, 25, .78);
+    --line: rgba(255, 200, 140, .28);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #10131c; color: #f8f1e6; font-family: "Trebuchet MS", "Segoe UI", sans-serif; }
+  #scene { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
+  .hidden { display: none !important; }
+  #hud { position: fixed; inset: 0; pointer-events: none; user-select: none; text-shadow: 0 1px 3px #000; }
+  .panel { background: var(--panel); border: 1px solid var(--line); box-shadow: 0 6px 24px rgba(0,0,0,.35); backdrop-filter: blur(3px); }
+
+  #topLeft { position: absolute; left: 18px; top: 16px; padding: 12px 16px; min-width: 214px; clip-path: polygon(0 0, 100% 0, 96% 100%, 0 100%); }
+  #cash { font-size: 30px; font-weight: 800; color: var(--amber); letter-spacing: 1px; line-height: 1; }
+  #cash small { font-size: 12px; color: #d9c8b6; font-weight: 600; letter-spacing: 2px; display: block; margin-top: 5px; }
+  .meter { margin-top: 8px; font-size: 10px; letter-spacing: 2px; color: #c4d2d6; display: flex; align-items: center; gap: 7px; }
+  .meter b { color: #fff; width: 30px; text-align: right; font-size: 11px; }
+  .track { flex: 1; height: 5px; background: rgba(255,255,255,.12); overflow: hidden; }
+  .track i { display: block; height: 100%; width: 100%; background: var(--mint); transition: width .2s; }
+  #healthFill { background: linear-gradient(90deg, #ff6f61, #ffb764); }
+  #districtName { margin-top: 10px; color: var(--mint); font-size: 11px; letter-spacing: 3px; }
+
+  #missionBanner { position: absolute; left: 50%; top: 14px; transform: translateX(-50%); width: min(560px, 52vw); padding: 9px 18px; text-align: center; border-top: 2px solid var(--amber); }
+  #missionTitle { font-size: 11px; letter-spacing: 4px; color: var(--amber); }
+  #objective { font-size: 16px; margin-top: 3px; font-weight: 700; }
+  #missionTimer { font-size: 12px; color: var(--red); margin-top: 2px; min-height: 14px; letter-spacing: 2px; }
+
+  #topRight { position: absolute; right: 16px; top: 16px; width: 206px; }
+  #stars { text-align: center; font-size: 26px; letter-spacing: 3px; color: #ffd166; height: 34px; }
+  #stars span { opacity: .22; }
+  #stars span.on { opacity: 1; text-shadow: 0 0 12px #ffb347; }
+  #minimap { display: block; width: 206px; height: 206px; border: 1px solid var(--line); background: rgba(6,20,28,.85); }
+  #compass { display: flex; justify-content: space-between; font-size: 10px; letter-spacing: 2px; color: #b9c8cf; padding: 4px 2px; }
+
+  #bottomLeft { position: absolute; left: 18px; bottom: 18px; display: flex; gap: 12px; align-items: flex-end; }
+  #slots { display: flex; gap: 5px; }
+  .slot { width: 62px; height: 54px; padding: 5px 6px; font-size: 10px; letter-spacing: 1px; color: #bfcbd0; position: relative; }
+  .slot b { display: block; font-size: 12px; color: #fff; margin-top: 4px; }
+  .slot span { position: absolute; right: 5px; top: 4px; opacity: .6; }
+  .slot.active { border-color: var(--amber); color: var(--amber); box-shadow: inset 0 0 18px rgba(255,183,100,.18); }
+  .slot.locked { opacity: .38; }
+  #radioBox { width: 232px; padding: 8px 12px 10px; }
+  #radioTop { display: flex; justify-content: space-between; align-items: baseline; }
+  #radioName { font-size: 14px; font-weight: 800; color: var(--mint); letter-spacing: 1px; }
+  #radioFreq { font-size: 11px; color: #d6c2a9; }
+  #radioTag { font-size: 10px; letter-spacing: 1px; opacity: .7; margin: 3px 0 5px; }
+  #eq { display: flex; gap: 3px; align-items: flex-end; height: 18px; }
+  #eq i { flex: 1; height: 25%; background: var(--mint); opacity: .8; transition: height .09s linear; }
+  #muted { color: var(--red); font-size: 9px; letter-spacing: 2px; }
+
+  #speedBox { position: absolute; right: 18px; bottom: 18px; width: 206px; padding: 8px 12px 10px; text-align: center; }
+  #speed { font-size: 42px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; color: #fff; }
+  #speedUnit { font-size: 10px; letter-spacing: 4px; color: var(--amber); }
+  #vehicleName { font-size: 11px; letter-spacing: 2px; color: #b7c6cb; margin-top: 5px; min-height: 14px; }
+  #gearBar { height: 4px; background: rgba(255,255,255,.13); margin-top: 7px; }
+  #gearFill { height: 100%; width: 0; background: linear-gradient(90deg, var(--mint), var(--amber), var(--red)); }
+
+  #crosshair { position: absolute; left: 50%; top: 50%; width: 16px; height: 16px; margin: -8px; opacity: .7; }
+  #crosshair::before, #crosshair::after { content: ""; position: absolute; background: #fff; }
+  #crosshair::before { left: 7px; top: 0; width: 2px; height: 16px; }
+  #crosshair::after { top: 7px; left: 0; height: 2px; width: 16px; }
+  #toast { position: absolute; left: 50%; bottom: 118px; transform: translateX(-50%); background: rgba(8,15,22,.85); border-left: 3px solid var(--amber); padding: 9px 20px; font-size: 13px; opacity: 0; transition: opacity .25s; max-width: 70vw; text-align: center; }
+  #toast.show { opacity: 1; }
+  #waypoint { position: absolute; left: 50%; top: 46%; transform: translate(-50%,-50%); color: var(--amber); font-size: 12px; letter-spacing: 2px; opacity: .85; }
+
+  .overlay { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at 50% 40%, rgba(14,26,34,.32), rgba(6,12,20,.62)); z-index: 5; }
+  .card { width: min(820px, 92vw); padding: 32px 38px; background: rgba(14,24,32,.9); border: 1px solid var(--line); box-shadow: 0 24px 90px rgba(0,0,0,.6); }
+  .kicker { color: var(--mint); letter-spacing: 7px; font-size: 11px; }
+  h1 { font-size: clamp(42px, 7vw, 82px); letter-spacing: 6px; margin: 4px 0 0; line-height: .95; color: #fff; text-shadow: 4px 4px 0 #b05243, 0 0 40px rgba(255,170,100,.3); }
+  h2 { font-size: 24px; letter-spacing: 3px; margin: 0 0 10px; color: var(--amber); }
+  .lead { color: #d9e2e2; line-height: 1.6; max-width: 640px; font-size: 14px; }
+  .districts { display: flex; gap: 18px; margin: 20px 0; }
+  .districts div { flex: 1; border-left: 3px solid var(--amber); padding: 6px 12px; }
+  .districts div:last-child { border-color: var(--mint); }
+  .districts b { display: block; letter-spacing: 3px; font-size: 13px; }
+  .districts small { color: #a9b9bd; letter-spacing: 1px; }
+  .crew { display: flex; gap: 10px; margin: 14px 0 20px; flex-wrap: wrap; }
+  .crew span { border: 1px solid var(--line); padding: 6px 12px; font-size: 12px; letter-spacing: 1px; }
+  .btn { pointer-events: auto; cursor: pointer; display: inline-block; border: 1px solid var(--amber); color: var(--amber); background: rgba(255,183,100,.08); padding: 11px 24px; letter-spacing: 3px; font-size: 12px; margin-right: 10px; }
+  .btn:hover { background: var(--amber); color: #12181d; }
+  .keys { font-size: 11px; color: #9fb0b6; line-height: 1.8; margin-top: 18px; letter-spacing: 1px; }
+  .keys kbd { color: var(--mint); border: 1px solid rgba(101,226,208,.35); padding: 1px 5px; }
+  #ledgerList { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 16px 0; }
+  .mission { border: 1px solid var(--line); padding: 10px 12px; font-size: 12px; }
+  .mission.done { border-color: var(--mint); color: var(--mint); }
+  .mission.current { border-color: var(--amber); background: rgba(255,183,100,.1); }
+  .mission b { display: block; color: #fff; font-size: 13px; letter-spacing: 1px; margin-bottom: 3px; }
+  .mission i { font-style: normal; color: var(--amber); }
+  #twist { color: var(--mint); border-left: 3px solid var(--mint); padding: 10px 14px; line-height: 1.6; font-size: 13px; }
+  .slotsRow { display: flex; gap: 8px; margin-top: 12px; }
+  .slotsRow button { flex: 1; padding: 8px; font-size: 11px; letter-spacing: 1px; cursor: pointer; pointer-events: auto; background: rgba(255,255,255,.05); color: #fff; border: 1px solid var(--line); }
+  .slotsRow button:hover { border-color: var(--amber); }
   #status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 </style>
 </head>
 <body>
-<canvas id="game" aria-label="Block Dodger: move the paddle left and right to dodge falling blocks and catch coins"></canvas>
+<canvas id="scene" aria-label="KOTA ARUNA, a 3D driving and exploration game"></canvas>
+
+<div id="hud" class="hidden">
+  <div id="topLeft" class="panel">
+    <div id="cash">$0<small>CASH ON HAND</small></div>
+    <div class="meter">HEALTH <div class="track"><i id="healthFill"></i></div><b id="healthNum">100</b></div>
+    <div class="meter">RESPECT <div class="track"><i id="respectFill"></i></div><b id="respectNum">0</b></div>
+    <div id="districtName">TELUK ARUNA</div>
+  </div>
+
+  <div id="missionBanner" class="panel">
+    <div id="missionTitle">NO ACTIVE CONTRACT</div>
+    <div id="objective">Press J to open the contract ledger</div>
+    <div id="missionTimer"></div>
+  </div>
+
+  <div id="topRight">
+    <div id="stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+    <canvas id="minimap" width="206" height="206"></canvas>
+    <div id="compass"><span>W · SENJA</span><span>N</span><span>E · ARUNA</span></div>
+  </div>
+
+  <div id="bottomLeft">
+    <div id="slots"></div>
+    <div id="radioBox" class="panel">
+      <div id="radioTop"><span id="radioName">RADAR FM</span><span id="radioFreq">101.7</span></div>
+      <div id="radioTag">Neon patrol</div>
+      <div id="eq"></div>
+      <div id="muted" class="hidden">MUTED</div>
+    </div>
+  </div>
+
+  <div id="speedBox" class="panel">
+    <div id="speed">0</div>
+    <div id="speedUnit">KM / H</div>
+    <div id="vehicleName">ON FOOT</div>
+    <div id="gearBar"><div id="gearFill"></div></div>
+  </div>
+
+  <div id="crosshair" class="hidden"></div>
+  <div id="toast"></div>
+  <div id="waypoint" class="hidden">◇ WAYPOINT</div>
+</div>
+
+<div id="titleScreen" class="overlay">
+  <div class="card">
+    <div class="kicker">A TWO-DISTRICT COASTAL STORY</div>
+    <h1>KOTA<br>ARUNA</h1>
+    <p class="lead">The sun never quite sets on the Aruna Channel. Four friends, seven contracts and one secret buried under the tide. Cross between glass towers and palm-lined marinas — and try to lose the stars.</p>
+    <div class="districts">
+      <div><b>TELUK ARUNA</b><small>Cranes · Glass · Harbour</small></div>
+      <div><b>MARINA SENJA</b><small>Palms · Jetty · Lighthouse</small></div>
+    </div>
+    <div class="crew"><span>ARA · book</span><span>DIMAS · wheel</span><span>SINTA · signal</span><span>BIMO · keys</span></div>
+    <button class="btn" id="startBtn">START THE STORY</button>
+    <button class="btn" id="continueBtn">CONTINUE</button>
+    <div class="slotsRow" id="loadSlots"></div>
+    <div class="keys"><kbd>WASD</kbd> move / drive / fly &nbsp; <kbd>E</kbd> enter · <kbd>Space</kbd> fire or climb &nbsp; <kbd>L</kbd> searchlight &nbsp; <kbd>J</kbd> ledger &nbsp; <kbd>R</kbd>/<kbd>T</kbd> radio &nbsp; <kbd>F</kbd> save &nbsp; <kbd>Esc</kbd> pause</div>
+  </div>
+</div>
+
+<div id="pauseScreen" class="overlay hidden">
+  <div class="card" style="max-width:520px">
+    <div class="kicker">ENGINE IDLING</div>
+    <h2>PAUSED</h2>
+    <p class="lead" id="pauseInfo">The tide waits for nobody, but it can wait for you.</p>
+    <button class="btn" id="resumeBtn">RESUME</button>
+    <button class="btn" id="saveBtn">QUICK SAVE</button>
+  </div>
+</div>
+
+<div id="ledger" class="overlay hidden">
+  <div class="card">
+    <div class="kicker">THE CREW'S BOOK</div>
+    <h2>CONTRACT LEDGER</h2>
+    <p class="lead" id="ledgerIntro">Ara keeps the book. Pick a job and the rest of the crew will answer.</p>
+    <div id="ledgerList"></div>
+    <div id="twist" class="hidden"></div>
+    <button class="btn" id="closeLedger">CLOSE ( J )</button>
+  </div>
+</div>
+
+<div id="reveal" class="overlay hidden">
+  <div class="card">
+    <div class="kicker">THE LAST CONTRACT</div>
+    <h2>PASANG SURUT</h2>
+    <p class="lead" id="revealText"></p>
+    <button class="btn" id="closeReveal">KEEP THE BOOK</button>
+  </div>
+</div>
+
+<div id="failure" class="overlay hidden">
+  <div class="card" style="max-width:520px">
+    <div class="kicker">THE CONTRACT SLIPPED</div>
+    <h2 id="failureTitle">TIME'S UP</h2>
+    <p class="lead" id="failureText"></p>
+    <button class="btn" id="retryBtn">TRY AGAIN</button>
+  </div>
+</div>
+
 <p id="status" role="status" aria-live="polite"></p>
+
+<script type="importmap">
+{ "imports": { "three": "./vendor/three.module.min.js" } }
+</script>
 <script type="module" src="./src/main.js"></script>
 </body>
 </html>

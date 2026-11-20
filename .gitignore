@@ -1,18 +1,20 @@
-# Files that are never part of the published entry
+# Generated hand-in output and any temporary staging area
 out/
-build/
 dist/
-/tmp/
+build/
+.stage/
+tmp/
 
-# Local scratch and editor debris
+# Editor / operating-system scratch
 *.log
 *.tmp
 *.swp
 *.bak
+*~
 .idea/
 .vscode/
 .DS_Store
 Thumbs.db
 
-# Nothing to install: the 3D engine is vendored inside game/vendor/
+# Dependencies are never needed: three.js lives in game/vendor/
 node_modules/
