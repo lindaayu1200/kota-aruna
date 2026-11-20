@@ -1,37 +1,27 @@
 {
   "title": "KOTA ARUNA",
   "seed": 1337,
-  "canvas": { "width": 1280, "height": 720 },
-  "format": "jpeg",
-  "source": "game/index.html with ?shot=<preset>&seed=1337",
-  "frames": [
+  "captured": "Desktop Chrome at 1280x720, staged through the game's own ?shot parameter",
+  "shots": [
     {
-      "path": "screenshots/01-harbor.jpg",
-      "caption": "Sunset over Teluk Aruna",
-      "preset": "harbor",
-      "district": "teluk-aruna",
-      "view": "elevated harbor panorama with the office skyline"
+      "file": "1-cover.jpg",
+      "shot": "cover",
+      "label": "Sunset over Teluk Aruna from the sports car: cash, respect, stars, radio, minimap district labels and the first contract"
     },
     {
-      "path": "screenshots/02-pursuit.jpg",
-      "caption": "Ring road pursuit",
-      "preset": "pursuit",
-      "district": "teluk-aruna",
-      "view": "third-person chase with three patrol cars"
+      "file": "2-chase.jpg",
+      "shot": "chase",
+      "label": "Four-star pursuit with patrol cruisers, sirens and the police helicopter's searchlight over the harbour"
     },
     {
-      "path": "screenshots/03-beam.jpg",
-      "caption": "Searchlight over Marina Senja",
-      "preset": "beam",
-      "district": "marina-senja",
-      "view": "helicopter sweep above the coastal district"
+      "file": "3-marina.jpg",
+      "shot": "marina",
+      "label": "On foot at Marina Senja beside the beach, with the seven-contract crew ledger open"
     },
     {
-      "path": "screenshots/04-tide.jpg",
-      "caption": "Pasang Surut at the helipad",
-      "preset": "tide",
-      "district": "teluk-aruna",
-      "view": "final crew gathering around the parked helicopter"
+      "file": "4-finale.jpg",
+      "shot": "finale",
+      "label": "The Pasang Surut reveal above the water, with the player's chopper and its searchlight in flight"
     }
   ]
 }

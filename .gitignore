@@ -1,12 +1,18 @@
-node_modules/
-output/
+# Files that are never part of the published entry
 out/
-out2/
 build/
 dist/
-cache/
-.temp/
+/tmp/
+
+# Local scratch and editor debris
 *.log
-*.tsbuildinfo
+*.tmp
+*.swp
+*.bak
+.idea/
+.vscode/
 .DS_Store
 Thumbs.db
+
+# Nothing to install: the 3D engine is vendored inside game/vendor/
+node_modules/

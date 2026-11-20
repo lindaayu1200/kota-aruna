@@ -1,71 +1,104 @@
-[![make.fun · gta6-01](https://make.fun/badge/gta6-01.svg)](https://make.fun/bounty/gta6-01?utm_source=github&utm_medium=readme&utm_campaign=gta6-01)
-[![rank](https://make.fun/badge/gta6-01/lindaayu1200/kota-aruna/rank.svg)](https://make.fun/bounty/gta6-01/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=gta6-01)
-[![reward](https://make.fun/badge/gta6-01/lindaayu1200/kota-aruna/reward.svg)](https://make.fun/bounty/gta6-01?utm_source=github&utm_medium=readme&utm_campaign=gta6-01)
-
 # KOTA ARUNA
 
-A self-contained three.js crime sandbox on a fictional Indonesian coastline at dusk. A single ring road ties together **Teluk Aruna** — towers, cranes, warehouses and a canal — with **Marina Senja** — pastel cottages, palms and a long wooden jetty reaching toward the lighthouse.
+[![make.fun competition](https://make.fun/badge/gta6-01.svg)](https://make.fun/c/gta6-01)
 
-Everything ships as static files. There is no build step, no account and no network traffic once the page is open.
+A self-contained 3D crime sandbox that runs straight from static files. There
+is no bundler, no install step and no network traffic at play time: three.js is
+vendored, the radio is synthesised in the browser, and the whole coast grows
+from one integer seed.
 
-## Story
+The sunset never quite finishes. Container cranes and glass towers crowd
+**Teluk Aruna** on the eastern side of the channel, while palms, a timber
+jetty and a turning lighthouse frame **Marina Senja** on the western shore.
 
-Ara, Dimas, Sinta and Bimo pull you through seven contracts: a borrowed car at the docks, a parcel under a beach umbrella, a tail on the orbital road, a searchlight sweep above the water, a rescue at the end of the pier and an ambush on the canal bridge. The last job, **Pasang Surut**, drops the twist: Sinta leaked the tide table to the people hiring you. Instead of taking the fall, the crew uses the rising water to turn the setup around.
+## The crew and the secret
 
-## What is in the box
+Four people run this coastline. **Ara** trades favours around the harbour,
+**Dimas** knows every shortcut behind a steering wheel, **Sinta** can pull a
+signal out of static, and **Bimo** keeps the workshop keys. Seven contracts
+move you between the two districts: a passenger fare, a lifted car, missing
+relay cases, a three-star pursuit, a timed run over the canal bridges, a street
+showdown, and one final flight.
 
-- On-foot movement, a drivable car and a flyable helicopter with a working spotlight cone
-- Five wanted stars, cooldown, bounty cash and pursuing patrol cars
-- Seven paid story contracts with crew dialogue and a final reveal
-- Three generated radio stations (synthesized with WebAudio), switch and mute keys
-- Four weapon slots: fists, pistol, SMG and rocket launcher
-- Circular minimap naming both districts, marking the current job and police units
-- Analog speed dial, health and armor meters, wallet and district display
-- Deterministic skyline; `?seed=1337` reproduces the same city
+That last job reveals **Pasang Surut**: the tide was never the point. The
+channel gates were opened at high water so crates could slip past the port
+police, the broken relays were a decoy, and every earlier favour was an
+audition. Ara kept the book, Dimas drove the boats, Bimo held the keys — and at
+the end the book is yours.
 
-## Run it
+## What is in the game
 
-Serve `game/` over HTTP and open `index.html`. The repository includes a Node standard-library server:
+- A fixed-seed coastal city with a street grid, elliptical ring road, canal
+  and two bridges, beach, jetty, lighthouse, helipad, traffic and pedestrians.
+- Cars and vans to steal and drive. The helicopter climbs on `Space`, drops on
+  `Ctrl`, turns on `A`/`D`, pitches on `W`/`S`, and `L` switches on a real
+  searchlight with a spotlight and a visible beam.
+- One to five wanted stars. Patrol cars give chase, ram and shoot; three stars
+  bring an air unit that tracks you with its own light. Lose the heat or pay
+  the fine.
+- Seven story contracts with character portraits, glowing pickups, rivals,
+  clocks and the Pasang Surut reveal. `J` opens the ledger at any time.
+- Four weapon slots — fists, pistol, SMG and rifle. Respect unlocks the heavier
+  guns; `1`–`4` selects a slot, `X` reloads and `Space` fires on foot.
+- Four procedurally synthesised radio stations. `R` and `T` change station,
+  `M` mutes, and the dashboard equaliser dances along.
+- A labelled minimap for both districts, a km/h speedometer, money, respect,
+  health, stars and the current objective, all visible at a glance.
+- Three workshops that repair the car and act as manual checkpoints, plus three
+  save slots and a continue button that survive a page reload.
+
+## Controls
+
+| Key | On foot | In a car | In the helicopter |
+| --- | --- | --- | --- |
+| `W A S D` | Walk | Throttle, brake, steer | Pitch and yaw |
+| `Shift` | Sprint | Boost | — |
+| `Space` | Fire | Handbrake | Climb |
+| `Ctrl` | — | — | Descend |
+| `E` | Talk, enter, repair | Leave vehicle | Leave once landed |
+| `L` | — | — | Searchlight |
+| `1`–`4` | Weapon slots | — | — |
+| `X` | Reload | — | — |
+| `J` | Contract ledger | Contract ledger | Contract ledger |
+| `R` / `T` / `M` | Radio next / back / mute | Same | Same |
+| `Arrows` or drag | Orbit camera | Orbit camera | Orbit camera |
+| `F` | Quick-save | Quick-save | Quick-save |
+| `Esc` | Pause | Pause | Pause |
+
+## Play locally
 
 ```sh
-node serve.ts
+node serve.ts --port 8099
 ```
 
-Then visit `http://localhost:8080/`. The fixed city is `?seed=1337`. Screenshot views are `?shot=harbor`, `?shot=pursuit`, `?shot=beam` and `?shot=tide`.
+Then open `http://localhost:8099/`. Add `?seed=42` to grow the coast from a
+different seed. Any static server works; `serve.ts` is a small Node standard
+library helper included for convenience.
 
-### Controls
+The four images in `screenshots/` are unedited captures of this build in
+Chrome. The URLs `?shot=cover`, `?shot=chase`, `?shot=marina` and
+`?shot=finale` stage the matching camera, props and HUD before a capture.
 
-| Key | Action |
-| --- | --- |
-| WASD | Walk, steer or fly |
-| Shift | Sprint |
-| Space | Handbrake / climb |
-| C | Descend in the helicopter |
-| F | Enter or leave the car |
-| H | Enter or leave the helicopter |
-| L | Toggle the searchlight |
-| E | Start the contract at the marker |
-| 1-4 | Choose a weapon |
-| Click / Ctrl | Fire |
-| R / M | Next radio station / mute |
-| P | Pause |
-
-## Layout
-
-- `game/index.html` — canvas, import map and HUD
-- `game/src/config.js` — districts, crew, contracts, guns, radio and tuning
-- `game/src/random.js` — small seeded generator for repeatable scenery
-- `game/src/city.js` — land, water, roads, skyline, cottages, palms, jetty and lighthouse
-- `game/src/main.js` — simulation, vehicles, combat, police, audio and interface
-- `game/vendor/three.module.min.js` — bundled three.js module
-- `screenshots/` — four 1280x720 JPEGs listed in `shots.json`
-
-## Hand-in
+## Hand in
 
 ```sh
+mkdir -p out
 MAKEFUN_OUTPUT_DIR=out node main.ts
 ```
 
-`main.ts` resolves its own folder with `fileURLToPath`, copies `game/` and `screenshots/`, adds `shots.json` and writes a deterministic `dossier.json`. Running it twice produces byte-identical output.
+`main.ts` checks the manifest, the core game files and the import map, copies
+`game/` and `screenshots/` into the output folder, and writes `dossier.json`
+with the kit's builder. It resolves its own location with `fileURLToPath`, so
+two consecutive runs produce byte-identical output.
 
-See the [make.fun gta6-01 bounty](https://make.fun/bounty/gta6-01) for the challenge details.
+## Source map
+
+- `game/index.html` — canvas, import map, HUD, menus and overlays.
+- `game/src/config.js` — map, palette, crew, contracts, guns, radio and rides.
+- `game/src/random.js` — seeded stream and angle helpers.
+- `game/src/city.js` — scenery, water animation and world queries.
+- `game/src/main.js` — driving, flying, law, combat, missions, HUD and shots.
+- `main.ts` — deterministic packaging step.
+- `shots.json` — the four captures and their captions.
+- `.gitignore` — scratch that never reaches the entry.
+- `README.md` — this guide.
