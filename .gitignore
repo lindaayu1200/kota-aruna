@@ -1,8 +1,11 @@
 node_modules/
+output/
 out/
 build/
+dist/
 .cache/
 .tmp/
 *.log
+*.tsbuildinfo
 .DS_Store
 Thumbs.db

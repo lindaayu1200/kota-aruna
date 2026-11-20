@@ -4,47 +4,46 @@
 
 # KOTA ARUNA
 
-An offline three.js crime sandbox on a fictional Indonesian harbor coast at
-sunset. Two districts share one ring road: **Teluk Aruna**, a downtown of lit
-towers, cranes and shipping sheds, and **Marina Senja**, a beach district of
-pastel houses, palms and a long wooden pier.
+An offline three.js crime sandbox set on a fictional Indonesian coast at sunset.
+One ring road connects **Teluk Aruna**, a dense harbor of towers and cranes, with
+**Marina Senja**, a quieter stretch of pastel houses, palms and a long wooden pier.
 
-Everything runs locally from static files. No build step, no account, no network
-requests while playing.
+All assets are local. The game needs no build step, account or network request
+once it is open in a browser.
 
-## Story
+## The story
 
-Ara, Dimas, Sinta and Bimo take seven jobs around the coast. The work starts
-with a car key at the harbor and moves through a beach package, a courier tail,
-a searchlight flight to the lighthouse, a fight on the old pier and an ambush on
-the channel bridge. The last job, **Pasang Surut**, turns it all around: Sinta
-admits she fed the employers the tide tables, and the crew flips the deal
-instead of taking the fall.
+Ara, Dimas, Sinta and Bimo hand out seven jobs that begin with a borrowed car at
+the docks and end with a flight around the channel. The chain moves from a
+beachside pickup to a courier watch, a helicopter sweep of the lighthouse, a
+fight on the pier and an ambush at the canal bridge. The seventh job,
+**Pasang Surut**, reveals that Sinta sold the tide schedule to the employers; the
+crew turns the setup around instead of taking the blame.
 
-## What is in the game
+## Highlights
 
-- Walk, drive or fly a third-person helicopter around a seeded open world
-- Helicopter searchlight with a real spot light and a soft cone
-- Five wanted stars, cooldown, and patrol cars that hunt you down
-- Cash rewards, bounties on police cars, and a full seven-mission chain
-- Procedural in-game radio with three stations (R cycles, M mutes)
+- Third-person walking, car driving and helicopter flight in one seeded city
+- Helicopter searchlight with a real spotlight and visible light cone
+- Five wanted stars, cooldown, bounties and pursuing patrol cars
+- Cash rewards across a seven-mission chain with crew dialogue
+- Procedural radio with three stations (R to switch, M to mute)
 - Four weapon slots: fists, pistol, SMG and rocket launcher (1-4, click to fire)
-- Round minimap with roads, both district labels, markers and patrol dots
-- Analog speedometer, health and armor meters, live cash and district readout
-- Deterministic `?seed=` so a number always rebuilds the same skyline
+- Round minimap with both district names, mission marker and police dots
+- Analog speedometer, health/armor meters, wallet and district readout
+- Repeatable skyline through `?seed=1337`
 
-## Run it
+## Play locally
 
-Serve `game/` as static files and open `index.html`. The included development
-server needs only Node:
+Serve `game/` over HTTP and open `index.html`. The bundled development server
+uses only Node's standard library:
 
 ```sh
 node serve.ts
 ```
 
-Then visit `http://localhost:8080/`. Add `?seed=1337` for a fixed city. The
-four captures can be recreated with `?shot=harbor`, `?shot=pursuit`,
-`?shot=beam` and `?shot=tide`.
+Open `http://localhost:8080/`. Add `?seed=1337` for a fixed city. The four
+capture presets are `?shot=harbor`, `?shot=pursuit`, `?shot=beam` and
+`?shot=tide`.
 
 ### Controls
 
@@ -57,33 +56,32 @@ four captures can be recreated with `?shot=harbor`, `?shot=pursuit`,
 | F | Enter or leave the car |
 | H | Enter or leave the helicopter |
 | L | Toggle the searchlight |
-| E | Start the current mission at its marker |
+| E | Begin the current mission at its marker |
 | 1-4 | Select weapon |
 | Click / Ctrl | Fire |
 | R / M | Next radio station / mute |
 | P | Pause |
 
-## Repository map
+## Files
 
-- `game/index.html` — page, import map and the complete HUD
+- `game/index.html` — canvas, import map and HUD styles
 - `game/src/config.js` — districts, crew, jobs, guns, radio and tuning
-- `game/src/random.js` — seeded generator for repeatable worlds
-- `game/src/city.js` — terrain, water, roads, skyline, houses, palms and pier
-- `game/src/main.js` — simulation, vehicles, combat, wanted level and HUD
-- `game/vendor/three.module.min.js` — vendored three.js, loaded without network
-- `screenshots/` — four 1280x720 JPEG renders listed in `shots.json`
+- `game/src/random.js` — seeded generator used by the skyline and prop scatter
+- `game/src/city.js` — roads, water, skyline, houses, palms, pier and beacon
+- `game/src/main.js` — simulation, vehicles, combat, police, radio and HUD
+- `game/vendor/three.module.min.js` — bundled three.js module
+- `screenshots/` — four 1280x720 JPEG renders described in `shots.json`
 
-## Hand-in package
+## Hand-in build
 
 ```sh
 mkdir -p out
 MAKEFUN_OUTPUT_DIR=out node main.ts
 ```
 
-`main.ts` resolves its own folder with `fileURLToPath`, copies `game/` and
-`screenshots/` into the output folder and writes a deterministic `dossier.json`
-within the competition caps. Two consecutive runs produce byte-identical
+`main.ts` finds its own directory with `fileURLToPath`, copies `game/` and
+`screenshots/` into the destination, includes `shots.json` and writes a
+deterministic `dossier.json`. Repeated runs produce byte-for-byte identical
 output.
 
-See the [make.fun gta6-01 bounty](https://make.fun/bounty/gta6-01) for the
-challenge this entry was built for.
+The challenge is listed on the [make.fun gta6-01 bounty](https://make.fun/bounty/gta6-01).
