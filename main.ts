@@ -3,25 +3,28 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildDossier } from './vendor/makefun-game.ts';
 
-const repositoryRoot = dirname(fileURLToPath(import.meta.url));
-const handInDirectory = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
+const sourceRoot = dirname(fileURLToPath(import.meta.url));
+const handIn = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
 
-mkdirSync(handInDirectory, { recursive: true });
+mkdirSync(handIn, { recursive: true });
 
 for (const folder of ['game', 'screenshots']) {
-  const destination = join(handInDirectory, folder);
-  rmSync(destination, { recursive: true, force: true });
-  cpSync(join(repositoryRoot, folder), destination, { recursive: true });
+  const target = join(handIn, folder);
+  rmSync(target, { recursive: true, force: true });
+  cpSync(join(sourceRoot, folder), target, { recursive: true });
 }
 
-rmSync(join(handInDirectory, 'shots.json'), { force: true });
-cpSync(join(repositoryRoot, 'shots.json'), join(handInDirectory, 'shots.json'));
+const manifestTarget = join(handIn, 'shots.json');
+rmSync(manifestTarget, { force: true });
+cpSync(join(sourceRoot, 'shots.json'), manifestTarget);
 
-const report = buildDossier(handInDirectory, {
+const reportTarget = join(handIn, 'dossier.json');
+rmSync(reportTarget, { force: true });
+const report = buildDossier(handIn, {
   text_max_bytes: 163840,
   screenshots: { max: 4, max_bytes: 262144 },
   game_max_files: 993,
   game_max_bytes: 50331648,
   game_path_max_bytes: 1000,
 });
-writeFileSync(join(handInDirectory, 'dossier.json'), report);
+writeFileSync(reportTarget, report);

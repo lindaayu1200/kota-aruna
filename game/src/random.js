@@ -1,57 +1,53 @@
-const DEFAULT_SEED = 20240617;
+const FALLBACK = 20240617;
 
-function sanitizeSeed(value) {
-  const number = Number(value);
-  if (!Number.isFinite(number)) return DEFAULT_SEED;
-  const whole = Math.trunc(number) >>> 0;
-  return whole === 0 ? DEFAULT_SEED : whole;
+function normalize(seed) {
+  const numeric = Number(seed);
+  if (!Number.isFinite(numeric)) return FALLBACK;
+  const truncated = Math.trunc(numeric) >>> 0;
+  return truncated === 0 ? FALLBACK : truncated;
 }
 
-export function createGenerator(seed = 1337) {
-  let state = sanitizeSeed(seed);
+export function makeRng(seed = 1337) {
+  let word = normalize(seed);
 
-  function draw() {
-    state ^= state << 13;
-    state ^= state >>> 17;
-    state ^= state << 5;
-    return (state >>> 0) / 4294967296;
+  function next() {
+    word = (word + 0x6d2b79f5) | 0;
+    let scrambled = Math.imul(word ^ (word >>> 15), 1 | word);
+    scrambled = (scrambled + Math.imul(scrambled ^ (scrambled >>> 7), 61 | scrambled)) ^ scrambled;
+    return ((scrambled ^ (scrambled >>> 14)) >>> 0) / 4294967296;
   }
 
   return {
-    seed: sanitizeSeed(seed),
-    draw,
-    between(low, high) {
-      return low + (high - low) * draw();
+    seed: normalize(seed),
+    next,
+    range(from, to) {
+      return from + (to - from) * next();
     },
-    integer(low, high) {
-      return Math.floor(low + (high - low + 1) * draw());
+    whole(from, to) {
+      return Math.floor(from + (to - from + 1) * next());
     },
-    odds(probability) {
-      return draw() < probability;
+    chance(probability) {
+      return next() < probability;
     },
-    choose(items) {
-      if (!Array.isArray(items) || items.length === 0) return undefined;
-      return items[Math.floor(draw() * items.length)];
+    pick(collection) {
+      return collection?.length ? collection[Math.floor(next() * collection.length)] : undefined;
     },
-    shuffled(items) {
-      const copy = Array.from(items);
-      for (let cursor = copy.length - 1; cursor > 0; cursor -= 1) {
-        const swap = Math.floor(draw() * (cursor + 1));
-        const held = copy[cursor];
-        copy[cursor] = copy[swap];
-        copy[swap] = held;
+    shuffle(collection) {
+      const result = [...collection];
+      for (let at = result.length - 1; at > 0; at -= 1) {
+        const swap = Math.floor(next() * (at + 1));
+        [result[at], result[swap]] = [result[swap], result[at]];
       }
-      return copy;
+      return result;
     },
     bell() {
-      const radius = Math.max(draw(), 1e-8);
-      const angle = draw() * Math.PI * 2;
-      return Math.sqrt(-2 * Math.log(radius)) * Math.cos(angle);
+      const a = Math.max(next(), 1e-9);
+      return Math.sqrt(-2 * Math.log(a)) * Math.cos(Math.PI * 2 * next());
     },
-    fork() {
-      return createGenerator(Math.floor(draw() * 4294967296));
+    branch() {
+      return makeRng(Math.floor(next() * 4294967296));
     },
   };
 }
 
-export default createGenerator;
+export default makeRng;
